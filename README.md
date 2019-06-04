@@ -3,7 +3,7 @@
 
 **kslash** is a collection of path utilities.
 
-# path(p) 
+## path(p) 
 
 Normalizes the path on all platforms.
 Converts backslashes to slashes on Windows.
@@ -14,8 +14,8 @@ slash.path 'C:\\Back\\Slash'                           ▸ C:/Back/Slash
 slash.path 'C:\\Back\\Slash\\..\\To\\The\\..\\Future'  ▸ C:/Back/To/Future
 ```
 
-Windows is capable of handling paths with forward slashes.
-That's why all following methods return 'slashed' paths -- except the next one -- which you can use in cases where it isn't :)
+Windows is capable of handling paths with forward slashes,
+that's why all exported functions return 'slashed' paths -- except the next one -- which you can use in cases where it isn't :)
 
 ## unslash(p)
 
@@ -27,6 +27,11 @@ On Windows it converts
 ```coffeescript
 slash.unslash '/c/test'                                ▸ C:\\test
 ```
+
+## utilities
+
+Here comes a list of the provided functions. I plan to document these as well, but for now you have to peek at the sources 🤢
+Drop me a note in the [issues](https://github.com/monsterkodi/kslash/issues) if you want me to prioritize any of them.
 
 ### dir(p)   
 ### file(p)   
@@ -94,4 +99,4 @@ slash.unslash '/c/test'                                ▸ C:\\test
 ## Notes
 
 - Most functions return an empty string if the provided path doesn't exist.
-- Callbacks are optional. If provided, callback will be called with result or empty string on failure.
+- Callbacks are optional. If provided, functionality will be executed synchonously and callback will be called with result or empty string on failure.
