@@ -3,7 +3,7 @@
 
 **kslash** is a collection of path utilities.
 
-### path(p) 
+# path(p) 
 
 Normalizes the path on all platforms.
 Converts backslashes to slashes on Windows.
@@ -17,7 +17,7 @@ slash.path 'C:\\Back\\Slash\\..\\To\\The\\..\\Future'  ▸ C:/Back/To/Future
 Windows is capable of handling paths with forward slashes.
 That's why all following methods return 'slashed' paths -- except the next one -- which you can use in cases where it isn't :)
 
-### unslash(p)
+## unslash(p)
 
 Normalizes the path on all platforms.
 On Windows it converts
@@ -25,7 +25,7 @@ On Windows it converts
 - first dirname to a drive letter if it has only one letter
 
 ```coffeescript
-slash.unslash "/c/test"                                ▸ C:\\test
+slash.unslash '/c/test'                                ▸ C:\\test
 ```
 
 ### dir(p)   
