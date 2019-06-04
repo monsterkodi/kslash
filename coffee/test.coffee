@@ -133,8 +133,6 @@ describe 'kslash', ->
         
         (slash.unenv 'C:/$Recycle.bin').should.eql 'C:/$Recycle.bin'
 
-        return if not slash.win()
-
         (slash.unenv '$HOME/test').should.eql slash.path(process.env['HOME']) + '/test'
 
     # 000   000  000   000   0000000  000       0000000    0000000  000   000  
