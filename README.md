@@ -3,6 +3,10 @@
 
 **kslash** is a collection of path utilities.
 
+It is meant to be used as a replacement for the internal `path` module.
+It aims to minimize the problems you get when writing platform independent code dealing with paths.
+But even if you target only one platform, I hope it might contain some tools of interest for you.
+
 ## path(p) 
 
 Normalizes the path on all platforms.
@@ -20,6 +24,7 @@ that's why all exported functions return 'slashed' paths -- except the next one 
 ## unslash(p)
 
 Normalizes the path on all platforms.
+
 On Windows it converts
 - slashes to backslashes
 - first dirname to a drive if it has only one letter
@@ -269,8 +274,16 @@ on `wsl` os.platform() returns 'linux', but path.sep is still '/'.
 
 ## isAbsolute(p) isRelative(p) normalize(p) dirname(p) extname(p) basename(p, ext) parse(p) join()
 
-Same as the functions of the path module but p is sanitized and slashed first.
+Same as the functions of the `path` module but p is `sanitized` and `slashed` first.
 
-## Notes
+## Doesn't trow
 
-- Most functions return an empty string if the provided path is an empty string or null or undefined.
+All functions return an empty string or null if the provided path is an empty string, null or undefined 
+or if an fs function threw an error.
+
+If this is too lax for your taste, or you want to debug your code, you can redefine the function `slash.error`:
+
+```coffeescript
+slash.error = (msg) -> # throw or log or something else ...
+```
+

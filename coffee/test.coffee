@@ -344,7 +344,7 @@ describe 'kslash', ->
 
         (slash.exists __filename).should.exist
         
-        (slash.exists __filename + 'foo').should.eql false
+        expect(slash.exists __filename + 'foo').to.not.exist
         
     it 'exists async', (done) ->
         

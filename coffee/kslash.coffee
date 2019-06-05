@@ -6,9 +6,9 @@
 000   000  0000000   0000000  000   000  0000000   000   000    
 ###
 
-os       = require 'os'
-fs       = require 'fs' 
-path     = require 'path'
+os   = require 'os'
+fs   = require 'fs' 
+path = require 'path'
 
 class Slash
 
@@ -19,13 +19,13 @@ class Slash
     # 000        000   000     000     000   000  
     
     @path: (p) ->
-        return Slash.error "Slash.path -- no path? #{p}" if not p? or p.length == 0
+        return Slash.error "Slash.path -- no path?" if not p?.length
         p = path.normalize p
         p = p.replace Slash.reg, '/'
         p
 
     @unslash: (p) ->
-        return Slash.error "Slash.unslash -- no path? #{p}" if not p? or p.length == 0
+        return Slash.error "Slash.unslash -- no path?" if not p?.length
         p = Slash.path p
         if Slash.win()
             if p.length >= 3 and p[0] == '/' == p[2] 
@@ -124,7 +124,9 @@ class Slash
     
     @pathlist: (p) -> # '/root/dir/file.txt' --> ['/', '/root', '/root/dir', '/root/dir/file.txt']
     
-        return [] if not p?.length
+        if not p?.length
+            Slash.error "Slash.pathlist -- no path?" 
+            return []
         p = Slash.path Slash.sanitize p
         list = [p]
         while Slash.dir(p) != ''
@@ -156,7 +158,7 @@ class Slash
         
     @sanitize: (p) -> 
         if not p?.length
-            return Slash.error 'empty path!'
+            return Slash.error "Slash.sanitize -- no path?" 
         if p[0] == '\n'
             Slash.error "leading newline in path! '#{p}'"
             return Slash.sanitize p.substr 1
@@ -261,38 +263,45 @@ class Slash
     @exists: (p, cb) ->
         
         if 'function' == typeof cb
-            if not p?
-                cb() 
-                return
-            p = Slash.resolve Slash.removeLinePos p
-            fs.access p, fs.R_OK | fs.F_OK, (err) ->
-                if err?
-                    cb() 
-                else
-                    fs.stat p, (err, stat) ->
-                        if err?
-                            cb()
-                        else
-                            cb stat
-            return
-        
-        if p?
             try
+                if not p?
+                    cb() 
+                    return
                 p = Slash.resolve Slash.removeLinePos p
-                if stat = fs.statSync(p)
-                    fs.accessSync p, fs.R_OK
-                    return stat
+                fs.access p, fs.R_OK | fs.F_OK, (err) ->
+                    if err?
+                        cb() 
+                    else
+                        fs.stat p, (err, stat) ->
+                            if err?
+                                cb()
+                            else
+                                cb stat
             catch err
-                if err.code in ['ENOENT', 'ENOTDIR']
-                    return false
-                error err
+               Slash.error "Slash.exists -- " + String(err) 
+        else
+            if p?
+                try
+                    p = Slash.resolve Slash.removeLinePos p
+                    if stat = fs.statSync(p)
+                        fs.accessSync p, fs.R_OK
+                        return stat
+                catch err
+                    if err.code in ['ENOENT', 'ENOTDIR']
+                        return null
+                    Slash.error "Slash.exists -- " + String(err) 
         null     
         
     @touch: (p) ->
         
-        fs.mkdirSync Slash.dirname(p), recursive:true
-        if not Slash.fileExists p
-            fs.writeFileSync p, ''
+        try
+            fs.mkdirSync Slash.dirname(p), recursive:true
+            if not Slash.fileExists p
+                fs.writeFileSync p, ''
+            return p
+        catch err
+            Slash.error "Slash.touch -- " + String(err) 
+            false
         
     @fileExists: (p, cb) ->
         
@@ -320,8 +329,12 @@ class Slash
     @isWritable: (p, cb) ->
         
         if 'function' == typeof cb
-            fs.access Slash.resolve(p), fs.R_OK | fs.W_OK, (err) ->
-                cb not err?
+            try
+                fs.access Slash.resolve(p), fs.R_OK | fs.W_OK, (err) ->
+                    cb not err?
+            catch err
+                Slash.error "Slash.isWritable -- " + String(err) 
+                cb false
         else
             try
                 fs.accessSync Slash.resolve(p), fs.R_OK | fs.W_OK
@@ -363,31 +376,38 @@ class Slash
         '.gitignore':1
         '.npmignore':1
     
-    @isText: (f) ->
+    @isText: (p) ->
     
-        if not Slash.textext
-            Slash.textext = {}
-            for ext in require 'textextensions'
-                Slash.textext[ext] = true
-            Slash.textext['crypt']  = true
+        try
+            if not Slash.textext
+                Slash.textext = {}
+                for ext in require 'textextensions'
+                    Slash.textext[ext] = true
+                Slash.textext['crypt']  = true
+            
+            ext = Slash.ext p
+            return true if ext and Slash.textext[ext]? 
+            return true if Slash.textbase[Slash.basename(f).toLowerCase()]
+            return false if not Slash.isFile p
+            isBinary = require 'isbinaryfile'
+            return not isBinary.isBinaryFileSync p
+        catch err
+            Slash.error "Slash.isText -- " + String(err)
+            false
         
-        ext = Slash.ext f
-        return true if ext and Slash.textext[ext]? 
-        return true if Slash.textbase[Slash.basename(f).toLowerCase()]
-        return false if not Slash.isFile f
-        isBinary = require 'isbinaryfile'
-        return not isBinary.isBinaryFileSync f
-        
-    @readText: (f, cb) ->
+    @readText: (p, cb) ->
         
         if 'function' == typeof cb
-            fs.readFile f, 'utf8', (err, text) -> 
-                cb not err? and text or ''
+            try
+                fs.readFile p, 'utf8', (err, text) -> 
+                    cb not err? and text or ''
+            catch err
+                return Slash.error "Slash.readText -- " + String(err)
         else
             try
-                fs.readFileSync f, 'utf8'
+                fs.readFileSync p, 'utf8'
             catch err
-                ''
+                return Slash.error "Slash.readText -- " + String(err)
                 
     # 00000000   00000000   0000000         000   000  000  000   000        00000000  00000000   00000000   
     # 000   000  000       000              000 0 000  000  0000  000        000       000   000  000   000  
