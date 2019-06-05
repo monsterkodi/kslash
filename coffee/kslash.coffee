@@ -32,7 +32,7 @@ class Slash
                 p = p[1] + ':' + p.slice 2
             p = path.normalize p
             if p[1] == ':'
-                p = p.splice 0, 1, p[0].toUpperCase()
+                p =  p[0].toUpperCase() + p[1..]
         p
         
     #  0000000  00000000   000      000  000000000  
@@ -143,8 +143,9 @@ class Slash
     @isAbsolute: (p)   -> path.isAbsolute Slash.sanitize(p)
     @isRelative: (p)   -> not Slash.isAbsolute Slash.sanitize(p)
     @dirname:    (p)   -> Slash.path path.dirname Slash.sanitize(p)
-    @normalize:  (p)   -> Slash.path path.normalize Slash.sanitize(p)
-    @dir:        (p)   -> 
+    @normalize:  (p)   -> Slash.path Slash.sanitize(p)
+    
+    @dir: (p) -> 
         p = Slash.sanitize p
         if Slash.isRoot p then return ''
         p = path.dirname p
@@ -396,9 +397,6 @@ class Slash
 
     @win: -> path.sep == '\\'
     
-    @error: (msg) ->
-        # error = require './error'
-        # error msg
-        ''
+    @error: (msg) -> ''
 
 module.exports = Slash
