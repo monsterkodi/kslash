@@ -9,8 +9,7 @@ But even if you target only one platform, I hope it might contain some tools of 
 
 ## path(p) 
 
-Normalizes the path on all platforms.
-Converts backslashes to slashes on Windows.
+Normalizes the path and converts backslashes to slashes.
 
 ```coffeescript
 slash = require 'kslash'
