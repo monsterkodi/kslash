@@ -29,29 +29,46 @@ slash.unslash '/c/test'                                ▸ C:\\test
 ```
 
 ## dir(p) 
+
+```coffeescript
+p = '/dir/file.txt'
+slash.dir(p)  ▸ /dir
+```
+
 ## file(p)   
+
+```coffeescript
+p = '/dir/file.txt'
+slash.file(p) ▸ file.txt
+```
+
 ## base(p)   
+
+```coffeescript
+p = '/dir/file.txt'
+slash.base(p) ▸ file
+```
+
 ## ext(p) 
 
 ```coffeescript
-p = '/root/dir/file.txt'
-slash.dir(p)  ▸ /root/dir
-slash.file(p) ▸ file.txt
-slash.base(p) ▸ file
+p = '/dir/file.txt'
 slash.ext(p)  ▸ txt
 ```
 
-## removeExt(p) 
+## removeExt(p)
 
 ```coffeescript
-slash.removeExt(p) ▸ /root/dir/file
+p = '/dir/file.txt'
+slash.removeExt(p) ▸ /dir/file
 ```
 
 ## swapExt(p, ext)
 
 ```coffeescript
-slash.swapExt(p, 'md')  ▸ /root/dir/file.md
-slash.swapExt(p, '.md') ▸ /root/dir/file.md
+p = '/dir/file.txt'
+slash.swapExt(p, 'md')  ▸ /dir/file.md
+slash.swapExt(p, '.md') ▸ /dir/file.md
 ```
 
 ## isRoot(p)
@@ -67,42 +84,86 @@ slash.isRoot('/')       ▸ true
 slash.removeDrive('C:\\dir\\file.txt')  ▸ /dir/file.txt
 ```
 ## home()
+
+```coffeescript
+slash.untilde('~/dir/file.txt')         ▸ /Users/kodi/dir/file.txt
+```
+
 ## tilde(p) 
+
+```coffeescript
+slash.tilde('/Users/kodi/dir/file.txt') ▸ ~/dir/file.txt
+```
+
 ## untilde(p) 
 
 ```coffeescript
-slash.home()                            ▸ /Users/kodi
-slash.tilde('/Users/kodi/dir/file.txt') ▸ ~/dir/file.txt
 slash.untilde('~/dir/file.txt')         ▸ /Users/kodi/dir/file.txt
 ```
 
 ## split(p)
-## splitExt(p) 
-## splitDrive(p)
 
 ```coffeescript
 p = 'C:\\dir/file.txt'
 slash.split(p)      ▸ ['C:', 'dir', 'file']
+```
+
+## splitExt(p) 
+
+```coffeescript
+p = 'C:\\dir/file.txt'
 slash.splitExt(p)   ▸ ['C:/dir/file', 'txt']
+```
+
+## splitDrive(p)
+
+```coffeescript
+p = 'C:\\dir/file.txt'
 slash.splitDrive(p) ▸ ['/dir/file', 'c']
 ```
 
 ## splitFileLine(p) 
-## splitFilePos(p) 
-## removeLinePos(p)
-## removeColumn(p) 
-## joinFilePos(p, pos) 
-## joinFileLine(p, line, col)
 
 ```coffeescript
 p = '/dir/file.txt:12:3'
 slash.splitFileLine(p)       ▸ ['/dir/file.txt', 12, 3]
+```
+
+## splitFilePos(p) 
+
+```coffeescript
+p = '/dir/file.txt:12:3'
 slash.splitFilePos(p)        ▸ ['/dir/file.txt', [3,11]]
+```
+
+## removeLinePos(p)
+
+```coffeescript
+p = '/dir/file.txt:12:3'
 slash.removeLinePos(p)       ▸ '/dir/file.txt'
+```
+
+## removeColumn(p) 
+
+```coffeescript
+p = '/dir/file.txt:12:3'
 slash.removeColumn(p)        ▸ '/dir/file.txt:12'
-slash.joinFileLine(p, 1, 2)  ▸ '/dir/file.txt:1:2'
+```
+
+## joinFilePos(p, pos) 
+
+```coffeescript
+p = '/dir/file.txt:12:3'
 slash.joinFilePos(p, [2,1])  ▸ '/dir/file.txt:0:2'
 ```
+
+## joinFileLine(p, line, col)
+
+```coffeescript
+p = '/dir/file.txt:12:3'
+slash.joinFileLine(p, 1, 2)  ▸ '/dir/file.txt:1:2'
+```
+
 ## pathlist(p) 
 
 ```coffeescript
