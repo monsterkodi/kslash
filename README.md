@@ -238,7 +238,7 @@ Like the unix command, creates intermediate directories if they don't exist.
 Returns [stat](https://nodejs.org/dist/latest/docs/api/fs.html#fs_class_fs_stats) of path p if it exists, null otherwise.
 
 The callback is optional.
-If provided, functionality will be executed synchronously and the callback will be called with the result
+If provided, the test is executed asynchronously and the callback will be called with the result
 
 ```coffeescript
 slash.exists p, (stat) -> if stat then # ...
