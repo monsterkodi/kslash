@@ -45,15 +45,19 @@ class Slash
     
     @splitDrive: (p) ->
         
-        if Slash.win()
-            root = Slash.parse(p).root
+        p = Slash.path p
+        parsed = Slash.parse p
+        root = parsed.root
 
-            if root.length > 1
-                if p.length > root.length
-                    filePath = Slash.path p.slice(root.length-1)
-                else 
-                    filePath = '/'
-                return [filePath , root.slice 0, root.length-2]
+        if root.length > 1
+            if p.length > root.length
+                filePath = p.slice(root.length-1)
+            else 
+                filePath = '/'
+            return [filePath , root.slice 0, root.length-2]
+        else if parsed.dir.length > 1
+            if parsed.dir[1] == ':'
+                return [p[2..], parsed.dir[..1]]
                 
         [Slash.path(p), '']
         

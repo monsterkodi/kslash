@@ -141,8 +141,8 @@ slash.splitFileLine(p)          ▸ ['/dir/file.txt', 12, 3]
 ## splitFilePos(p) 
 
 ```coffeescript
-p = '/dir/file.txt:12:3'
-slash.splitFilePos(p)           ▸ ['/dir/file.txt', [3,11]]
+p = '/dir/file.txt:12'
+slash.splitFilePos(p)           ▸ ['/dir/file.txt', [0,11]]
 ```
 
 ## removeLinePos(p)
@@ -162,14 +162,14 @@ slash.removeColumn(p)           ▸ /dir/file.txt:12
 ## joinFilePos(p, pos) 
 
 ```coffeescript
-p = '/dir/file.txt:12:3'
+p = '/dir/file.txt:12'
 slash.joinFilePos(p, [2, 1])    ▸ /dir/file.txt:2:2
 ```
 
 ## joinFileLine(p, line, col)
 
 ```coffeescript
-p = '/dir/file.txt:12:3'
+p = '/dir/file.txt'
 slash.joinFileLine(p, 1, 2)     ▸ /dir/file.txt:1:2
 ```
 
@@ -236,11 +236,15 @@ Like the unix command, creates intermediate directories if they don't exist.
 
 ## exists(p, cb)
 
-Returns stat of path p if it exists, null otherwise.
+Returns [stat](https://nodejs.org/dist/latest/docs/api/fs.html#fs_class_fs_stats) of path p if it exists, null otherwise.
 
 The callback is optional.
 If provided, functionality will be executed synchronously and the callback will be called with result.
 The same is true for the following functions that have a callback argument:
+
+```coffeescript
+slash.exists p, (stat) -> if stat then # ...
+```
 
 ## isDir(p, cb) dirExists(p, cb)
 
