@@ -3,9 +3,9 @@
 
 **kslash** is a collection of path utilities.
 
-It is meant to be used as a replacement for the internal `path` module.
+It is meant to be used as a replacement for the [nodejs](https://nodejs.org/) `[path](https://nodejs.org/dist/latest/docs/api/path.html)` module.
 It aims to minimize the problems you get when writing platform independent code dealing with paths.
-But even if you target only one platform, I hope it might contain some tools of interest to you.
+I hope it might contain some tools of interest to you, even if you target only one platform.
 
 ## path(p) 
 
@@ -238,12 +238,13 @@ Like the unix command, creates intermediate directories if they don't exist.
 Returns [stat](https://nodejs.org/dist/latest/docs/api/fs.html#fs_class_fs_stats) of path p if it exists, null otherwise.
 
 The callback is optional.
-If provided, functionality will be executed synchronously and the callback will be called with result.
-The same is true for the following functions that have a callback argument:
+If provided, functionality will be executed synchronously and the callback will be called with the result
 
 ```coffeescript
 slash.exists p, (stat) -> if stat then # ...
 ```
+
+The same is true for the following functions that have a callback argument:
 
 ## isDir(p, cb) dirExists(p, cb)
 
