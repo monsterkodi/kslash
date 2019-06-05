@@ -3,7 +3,7 @@
 
 **kslash** is a collection of path utilities.
 
-It is meant to be used as a replacement for the [nodejs](https://nodejs.org/) `[path](https://nodejs.org/dist/latest/docs/api/path.html)` module.
+It is meant to be used as a replacement for the [nodejs](https://nodejs.org/) [`path`](https://nodejs.org/dist/latest/docs/api/path.html) module.
 It aims to minimize the problems you get when writing platform independent code dealing with paths.
 I hope it might contain some tools of interest to you, even if you target only one platform.
 
