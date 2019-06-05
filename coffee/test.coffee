@@ -4,7 +4,7 @@
 #    000     000            000     000
 #    000     00000000  0000000      000
 
-slash = require '../'
+▸profile slash = require '../'
 chai = require 'chai'
 chai.should()
 expect = chai.expect

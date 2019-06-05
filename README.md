@@ -5,7 +5,7 @@
 
 It is meant to be used as a replacement for the internal `path` module.
 It aims to minimize the problems you get when writing platform independent code dealing with paths.
-But even if you target only one platform, I hope it might contain some tools of interest for you.
+But even if you target only one platform, I hope it might contain some tools of interest to you.
 
 ## path(p) 
 
@@ -31,6 +31,7 @@ On Windows it converts
 
 ```coffeescript
 slash.unslash '/c/test'         ▸ C:\\test
+slash.unslash 'D:/c/test'       ▸ D:\\c\\test
 ```
 
 ## dir(p) 
@@ -148,28 +149,28 @@ slash.splitFilePos(p)           ▸ ['/dir/file.txt', [3,11]]
 
 ```coffeescript
 p = '/dir/file.txt:12:3'
-slash.removeLinePos(p)          ▸ '/dir/file.txt'
+slash.removeLinePos(p)          ▸ /dir/file.txt
 ```
 
 ## removeColumn(p) 
 
 ```coffeescript
 p = '/dir/file.txt:12:3'
-slash.removeColumn(p)           ▸ '/dir/file.txt:12'
+slash.removeColumn(p)           ▸ /dir/file.txt:12
 ```
 
 ## joinFilePos(p, pos) 
 
 ```coffeescript
 p = '/dir/file.txt:12:3'
-slash.joinFilePos(p, [2, 1])    ▸ '/dir/file.txt:2:2'
+slash.joinFilePos(p, [2, 1])    ▸ /dir/file.txt:2:2
 ```
 
 ## joinFileLine(p, line, col)
 
 ```coffeescript
 p = '/dir/file.txt:12:3'
-slash.joinFileLine(p, 1, 2)     ▸ '/dir/file.txt:1:2'
+slash.joinFileLine(p, 1, 2)     ▸ /dir/file.txt:1:2
 ```
 
 ## pathlist(p) 
@@ -195,7 +196,7 @@ slash.unenv(p)                  ▸ C:/Users/kodi/dir
 
 ```coffeescript
 p = 'C:/test/some/path.txt' 
-to ='C:/test/some/other/path')
+to ='C:/test/some/other/path'
 slash.relative(p,to)            ▸ '../../path.txt'
 ```
 
@@ -276,10 +277,10 @@ on `wsl` os.platform() returns 'linux', but path.sep is still '/'.
 
 Same as the functions of the `path` module but p is `sanitized` and `slashed` first.
 
-## Doesn't trow
+## Doesn't throw
 
 All functions return an empty string or null if the provided path is an empty string, null or undefined 
-or if an fs function threw an error.
+or if an fs-function throws an error.
 
 If this is too lax for your taste, or you want to debug your code, you can redefine the function `slash.error`:
 
