@@ -101,6 +101,7 @@ class Slash
     
     @joinFilePos: (file, pos) -> # ['file.txt', [3, 0]] --> file.txt:1:3
         
+        file = Slash.removeLinePos file
         if not pos? or not pos[0]?
             file
         else if pos[0]
@@ -110,8 +111,9 @@ class Slash
                 
     @joinFileLine: (file, line, col) -> # 'file.txt', 1, 2 --> file.txt:1:2
         
-        return file if not line?
-        return "#{file}:#{line}" if not col?
+        file = Slash.removeLinePos file
+        return file if not line
+        return "#{file}:#{line}" if not col
         "#{file}:#{line}:#{col}"
     
     # 00000000    0000000   000000000  000   000  000      000   0000000  000000000  
@@ -141,7 +143,7 @@ class Slash
     @extname:    (p)   -> path.extname Slash.sanitize(p)
     @basename:   (p,e) -> path.basename Slash.sanitize(p), e
     @isAbsolute: (p)   -> path.isAbsolute Slash.sanitize(p)
-    @isRelative: (p)   -> not Slash.isAbsolute Slash.sanitize(p)
+    @isRelative: (p)   -> not Slash.isAbsolute p
     @dirname:    (p)   -> Slash.path path.dirname Slash.sanitize(p)
     @normalize:  (p)   -> Slash.path Slash.sanitize(p)
     
@@ -192,6 +194,7 @@ class Slash
                     p = p.slice(0, i) + v + p.slice(i+k.length+1)
                     break
             i = p.indexOf '$', i+1
+            
         Slash.path p
     
     @resolve: (p) ->
@@ -384,7 +387,6 @@ class Slash
             try
                 fs.readFileSync f, 'utf8'
             catch err
-                
                 ''
                 
     # 00000000   00000000   0000000         000   000  000  000   000        00000000  00000000   00000000   

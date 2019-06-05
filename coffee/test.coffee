@@ -302,9 +302,35 @@ describe 'kslash', ->
         
         (slash.joinFilePos '/some/path', [1,5]).should.eql '/some/path:6:1'
         
+        (slash.joinFilePos '/some/path:23:45', [1,5]).should.eql '/some/path:6:1'
+        
+        (slash.joinFilePos '/some/path:23', [1,5]).should.eql '/some/path:6:1'
+        
         (slash.joinFilePos '/some/path').should.eql '/some/path'
 
         (slash.joinFilePos '/some/path', []).should.eql '/some/path'
+        
+    #       000   0000000   000  000   000  00000000  000  000      00000000  000      000  000   000  00000000  
+    #       000  000   000  000  0000  000  000       000  000      000       000      000  0000  000  000       
+    #       000  000   000  000  000 0 000  000000    000  000      0000000   000      000  000 0 000  0000000   
+    # 000   000  000   000  000  000  0000  000       000  000      000       000      000  000  0000  000       
+    #  0000000    0000000   000  000   000  000       000  0000000  00000000  0000000  000  000   000  00000000  
+    
+    it 'joinFileLine', ->
+
+        (slash.joinFileLine '/some/path', 1).should.eql '/some/path:1'
+
+        (slash.joinFileLine '/some/path', 4, 0).should.eql '/some/path:4'
+        
+        (slash.joinFileLine '/some/path', 5, 1).should.eql '/some/path:5:1'
+        
+        (slash.joinFileLine '/some/path:23:45', 5, 1).should.eql '/some/path:5:1'
+        
+        (slash.joinFileLine '/some/path:23', 5, 1).should.eql '/some/path:5:1'
+        
+        (slash.joinFileLine '/some/path').should.eql '/some/path'
+
+        (slash.joinFileLine '/some/path', 0).should.eql '/some/path'
         
     # 00000000  000   000  000   0000000  000000000   0000000  
     # 000        000 000   000  000          000     000       
