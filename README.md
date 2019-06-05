@@ -157,7 +157,7 @@ slash.removeColumn(p)           ▸ '/dir/file.txt:12'
 
 ```coffeescript
 p = '/dir/file.txt:12:3'
-slash.joinFilePos(p, [2,1])     ▸ '/dir/file.txt:0:2'
+slash.joinFilePos(p, [2, 1])    ▸ '/dir/file.txt:2:2'
 ```
 
 ## joinFileLine(p, line, col)
@@ -196,7 +196,7 @@ slash.relative(p,to)            ▸ '../../path.txt'
 
 ## samePath(p, q) 
 
-Resolves p and q and compares the results.
+`Resolves` p and q and compares the results.
 
 ## encode(p) 
 
@@ -218,7 +218,7 @@ slash.fileUrl(p)                ▸ 'file:///dir/a%20%23%20b'
 
 ## pkg(p)
 
-Searches backwards in pathlist of p for a package.json and returns the containing folder, if one is found.
+Searches backwards in `pathlist` of p for a package.json and returns the containing folder, if one is found.
 
 ## git(p) 
 
@@ -255,7 +255,7 @@ Returns true if p is a textfile.
 ## readText(p, cb)
 
 Returns content of p as an utf8 string. 
-Returns an emty string, if p doesn't exist or isn't readable.
+Returns an empty string, if p doesn't exist or isn't readable.
 
 ## sanitize(p)
 
