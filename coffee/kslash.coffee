@@ -20,8 +20,8 @@ class Slash
     
     @path: (p) ->
         return Slash.error "Slash.path -- no path?" if not p?.length
-        p = path.normalize p
         p = p.replace Slash.reg, '/'
+        p = path.normalize p
         p
 
     @unslash: (p) ->
@@ -57,7 +57,10 @@ class Slash
             return [filePath , root.slice 0, root.length-2]
         else if parsed.dir.length > 1
             if parsed.dir[1] == ':'
-                return [p[2..], parsed.dir[..1]]
+                return [p[2..], parsed.dir[0]]
+        else if parsed.base.length == 2
+            if parsed.base[1] == ':'
+                return ['/', parsed.base[0]]
                 
         [Slash.path(p), '']
         
@@ -131,36 +134,46 @@ class Slash
         if not p?.length
             Slash.error "Slash.pathlist -- no path?" 
             return []
-        p = Slash.path Slash.sanitize p
+            
+        p = Slash.normalize p
+        p = p[...p.length-1] if p.length > 1 and  p[p.length-1] == '/'
         list = [p]
         while Slash.dir(p) != ''
             list.unshift Slash.dir(p)
             p = Slash.dir p
         list
         
-    # 000   000   0000000   00     00  00000000  
-    # 0000  000  000   000  000   000  000       
-    # 000 0 000  000000000  000000000  0000000   
-    # 000  0000  000   000  000 0 000  000       
-    # 000   000  000   000  000   000  00000000  
+    # 0000000     0000000    0000000  00000000             000   000   0000000   00     00  00000000                 
+    # 000   000  000   000  000       000                  0000  000  000   000  000   000  000                      
+    # 0000000    000000000  0000000   0000000              000 0 000  000000000  000000000  0000000                  
+    # 000   000  000   000       000  000       000        000  0000  000   000  000 0 000  000      000  000  000   
+    # 0000000    000   000  0000000   00000000    0        000   000  000   000  000   000  00000000 000  000  000   
     
     @base:       (p)   -> path.basename Slash.sanitize(p), path.extname Slash.sanitize(p)
     @file:       (p)   -> path.basename Slash.sanitize(p)
     @extname:    (p)   -> path.extname Slash.sanitize(p)
     @basename:   (p,e) -> path.basename Slash.sanitize(p), e
-    @isAbsolute: (p)   -> path.isAbsolute Slash.sanitize(p)
+    @isAbsolute: (p)   -> p = Slash.sanitize(p); p[1] == ':' or path.isAbsolute p
     @isRelative: (p)   -> not Slash.isAbsolute p
     @dirname:    (p)   -> Slash.path path.dirname Slash.sanitize(p)
     @normalize:  (p)   -> Slash.path Slash.sanitize(p)
     
+    # 0000000    000  00000000   
+    # 000   000  000  000   000  
+    # 000   000  000  0000000    
+    # 000   000  000  000   000  
+    # 0000000    000  000   000  
+    
     @dir: (p) -> 
-        p = Slash.sanitize p
+        
+        p = Slash.normalize p
         if Slash.isRoot p then return ''
         p = path.dirname p
         if p == '.' then return ''
         Slash.path p
         
     @sanitize: (p) -> 
+        
         if not p?.length
             return Slash.error "Slash.sanitize -- no path?" 
         if p[0] == '\n'
@@ -206,7 +219,12 @@ class Slash
     @resolve: (p) ->
         
         p = process.cwd() if not p?.length
-        Slash.path path.resolve Slash.unenv Slash.untilde p
+        
+        p = Slash.unenv Slash.untilde p
+        
+        if Slash.isRelative p
+            p = Slash.path path.resolve p
+        p
     
     @relative: (rel, to) ->
         
@@ -215,8 +233,12 @@ class Slash
         return rel if not Slash.isAbsolute rel
         if Slash.resolve(to) == rel
             return '.'
-            
-        Slash.path path.relative Slash.resolve(to), rel
+
+        [rl, rd] = Slash.splitDrive rel
+        [to, td] = Slash.splitDrive Slash.resolve to
+        if rd and td and rd != td
+            return rel
+        Slash.path path.relative to, rl
         
     @fileUrl: (p) -> "file:///#{Slash.encode p}"
 

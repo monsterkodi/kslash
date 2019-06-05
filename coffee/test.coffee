@@ -9,7 +9,22 @@ chai = require 'chai'
 chai.should()
 expect = chai.expect
 
-describe 'kslash', ->
+describe 'kslash' ->
+    
+    # 000   0000000  00000000    0000000    0000000   000000000  
+    # 000  000       000   000  000   000  000   000     000     
+    # 000  0000000   0000000    000   000  000   000     000     
+    # 000       000  000   000  000   000  000   000     000     
+    # 000  0000000   000   000   0000000    0000000      000     
+    
+    it 'isRoot' ->
+        
+        (slash.isRoot 'C:/').should.eql true
+        (slash.isRoot 'D:').should.eql true
+        (slash.isRoot '/').should.eql true
+        (slash.isRoot '/a').should.eql false
+        (slash.isRoot 'c:/a').should.eql false
+        (slash.isRoot 'C:\\a').should.eql false
     
     # 0000000    000  00000000   
     # 000   000  000  000   000  
@@ -17,14 +32,19 @@ describe 'kslash', ->
     # 000   000  000  000   000  
     # 0000000    000  000   000  
     
-    it 'dir', ->
+    it 'dir' ->
         
         (slash.dir '/some/path/file.txt').should.eql '/some/path'
         
         (slash.dir '/some/dir/').should.eql '/some'
+        (slash.dir '/some/dir').should.eql '/some'
         
-        if slash.win()
-            (slash.dir 'C:\\Back\\').should.eql 'C:/'
+        (slash.dir '/some/').should.eql '/'
+        (slash.dir '/some').should.eql '/'
+        
+        
+        (slash.dir 'C:/Back').should.eql 'C:'
+        (slash.dir 'D:\\Back').should.eql 'D:'
         
         (slash.dir '../..').should.eql '..'
 
@@ -42,8 +62,8 @@ describe 'kslash', ->
         
         (slash.dir '~/').should.eql ''
         
-        if slash.win()
-            (slash.dir 'C:/').should.eql ''
+        (slash.dir 'C:/').should.eql ''
+        (slash.dir 'C:/').should.eql ''
         
     # 00000000    0000000   000000000  000   000  000      000   0000000  000000000  
     # 000   000  000   000     000     000   000  000      000  000          000     
@@ -51,16 +71,18 @@ describe 'kslash', ->
     # 000        000   000     000     000   000  000      000       000     000     
     # 000        000   000     000     000   000  0000000  000  0000000      000     
     
-    it 'pathlist', ->
+    it 'pathlist' ->
         
         (slash.pathlist '/some/path.txt').should.eql ['/', '/some', '/some/path.txt']
 
         (slash.pathlist '/').should.eql ['/']
-        
+        (slash.pathlist '.').should.eql ['.']
         (slash.pathlist '').should.eql []
         
-        if slash.win()
-            (slash.pathlist 'C:\\Back\\Slash\\').should.eql ['C:/', 'C:/Back', 'C:/Back/Slash/']
+        (slash.pathlist 'C:\\Back\\Slash\\').should.eql ['C:', 'C:/Back', 'C:/Back/Slash']
+        (slash.pathlist 'C:/Slash').should.eql ['C:', 'C:/Slash']
+        (slash.pathlist '/c/Slash').should.eql ['/', '/c', '/c/Slash']
+        (slash.pathlist '\\d\\Slash').should.eql ['/', '/d', '/d/Slash']
 
         (slash.pathlist '~').should.eql ['~']
                     
@@ -70,7 +92,7 @@ describe 'kslash', ->
     # 000   000  000   000       000  000       
     # 0000000    000   000  0000000   00000000  
     
-    it 'base', -> 
+    it 'base' -> 
         
         (slash.base '/some/path.txt').should.eql 'path'
             
@@ -80,9 +102,7 @@ describe 'kslash', ->
     # 000        000   000     000     000   000  
     # 000        000   000     000     000   000  
     
-    it 'path', ->
-        
-        return if not slash.win()
+    it 'path' ->
         
         (slash.path "C:\\Back\\Slash\\Crap").should.eql "C:/Back/Slash/Crap"
         
@@ -94,11 +114,9 @@ describe 'kslash', ->
     # 000   000  000   000  000  000  0000  
     #  0000000    0000000   000  000   000  
     
-    it 'join', ->
+    it 'join' ->
         
         (slash.join 'a', 'b', 'c').should.eql 'a/b/c'
-        
-        return if not slash.win()
         
         (slash.join 'C:\\FOO', '.\\BAR', 'that\\sucks').should.eql 'C:/FOO/BAR/that/sucks'
 
@@ -108,7 +126,7 @@ describe 'kslash', ->
     # 000   000  000   000  000 0 000  000       
     # 000   000   0000000   000   000  00000000  
     
-    it 'home', ->
+    it 'home' ->
         
         if slash.win()
             home = slash.path process.env['HOMEDRIVE'] + process.env['HOMEPATH']
@@ -129,7 +147,7 @@ describe 'kslash', ->
     # 000   000  000  0000  000       000  0000     000     
     #  0000000   000   000  00000000  000   000      0      
     
-    it 'unenv', ->
+    it 'unenv' ->
         
         (slash.unenv 'C:/$Recycle.bin').should.eql 'C:/$Recycle.bin'
 
@@ -141,7 +159,7 @@ describe 'kslash', ->
     # 000   000  000  0000       000  000      000   000       000  000   000  
     #  0000000   000   000  0000000   0000000  000   000  0000000   000   000  
     
-    it 'unslash', ->
+    it 'unslash' ->
         
         return if not slash.win()
 
@@ -153,9 +171,14 @@ describe 'kslash', ->
     # 000   000  000            000  000   000  000         000     000       
     # 000   000  00000000  0000000    0000000   0000000      0      00000000  
     
-    it 'resolve', ->
+    it 'resolve' ->
         
         (slash.resolve '~').should.eql slash.home()
+        (slash.resolve '/').should.eql '/'
+        (slash.resolve 'C:/').should.eql 'C:/'
+        (slash.resolve 'C:').should.eql 'C:'
+        (slash.resolve 'C:\\').should.eql 'C:/'
+        (slash.resolve 'C:/some/path/on.c').should.eql 'C:/some/path/on.c'
 
     # 00000000   00000000  000       0000000   000000000  000  000   000  00000000  
     # 000   000  000       000      000   000     000     000  000   000  000       
@@ -163,7 +186,7 @@ describe 'kslash', ->
     # 000   000  000       000      000   000     000     000     000     000       
     # 000   000  00000000  0000000  000   000     000     000      0      00000000  
     
-    it 'relative', ->
+    it 'relative' ->
         
         (slash.relative 'C:\\test\\some\\path.txt', 'C:\\test\\some\\other\\path').should.eql '../../path.txt'
     
@@ -171,11 +194,19 @@ describe 'kslash', ->
 
         (slash.relative 'C:/Users/kodi/s/konrad/app/js/coffee.js', 'C:/Users/kodi/s/konrad').should.eql 'app/js/coffee.js'
 
-        if slash.win()
-            
-            (slash.relative 'C:/some/path/on.c', 'D:/path/on.d').should.eql 'C:/some/path/on.c'
-            
-            (slash.relative 'C:\\some\\path\\on.c', 'D:\\path\\on.d').should.eql 'C:/some/path/on.c'
+        (slash.relative 'C:/some/path/on.c', 'D:/path/on.d').should.eql 'C:/some/path/on.c'
+        
+        (slash.relative 'C:\\some\\path\\on.c', 'D:\\path\\on.d').should.eql 'C:/some/path/on.c'
+
+        (slash.relative '\\test\\some\\path.txt', '\\test\\some\\other\\path').should.eql '../../path.txt'
+    
+        (slash.relative '\\some\\path', '/some/path').should.eql '.'
+
+        (slash.relative '/Users/kodi/s/konrad/app/js/coffee.js', '/Users/kodi/s/konrad').should.eql 'app/js/coffee.js'
+
+        (slash.relative '/some/path/on.c', '/path/on.d').should.eql '../../some/path/on.c'
+        
+        (slash.relative '\\some\\path\\on.c', '\\path\\on.d').should.eql '../../some/path/on.c'
         
     # 00000000    0000000   00000000    0000000  00000000  
     # 000   000  000   000  000   000  000       000       
@@ -183,7 +214,7 @@ describe 'kslash', ->
     # 000        000   000  000   000       000  000       
     # 000        000   000  000   000  0000000   00000000  
     
-    it 'parse', ->
+    it 'parse' ->
         
         return if not slash.win()
         (slash.parse('c:').root).should.eql 'c:/'
@@ -196,7 +227,7 @@ describe 'kslash', ->
     #      000  000        000      000     000     
     # 0000000   000        0000000  000     000     
     
-    it 'split', ->
+    it 'split' ->
         
         (slash.split '/c/users/home/').should.eql ['c', 'users', 'home']
         
@@ -212,11 +243,9 @@ describe 'kslash', ->
     #      000  000        000      000     000     000   000  000   000  000     000     000       
     # 0000000   000        0000000  000     000     0000000    000   000  000      0      00000000  
     
-    it 'splitDrive', ->
+    it 'splitDrive' ->
         
         (slash.splitDrive '/some/path').should.eql ['/some/path', '']
-        
-        return if not slash.win()
         
         (slash.splitDrive 'c:/some/path').should.eql ['/some/path', 'c']
         
@@ -232,12 +261,10 @@ describe 'kslash', ->
     # 000   000  000       000 0 000  000   000     000     000       000   000  000   000  000     000     000       
     # 000   000  00000000  000   000   0000000       0      00000000  0000000    000   000  000      0      00000000  
     
-    it 'removeDrive', ->
+    it 'removeDrive' ->
         
         (slash.removeDrive '/some/path').should.eql '/some/path'
 
-        return if not slash.win()
-        
         (slash.removeDrive 'c:/some/path').should.eql '/some/path'
 
         (slash.removeDrive 'c:\\some\\path').should.eql '/some/path'
@@ -254,7 +281,7 @@ describe 'kslash', ->
     #      000  000        000      000     000     000       000  000      000       000      000  000  0000  000       
     # 0000000   000        0000000  000     000     000       000  0000000  00000000  0000000  000  000   000  00000000  
     
-    it 'splitFileLine', ->
+    it 'splitFileLine' ->
 
         (slash.splitFileLine '/some/path').should.eql ['/some/path', 1, 0]
         
@@ -262,8 +289,6 @@ describe 'kslash', ->
 
         (slash.splitFileLine '/some/path:123:15').should.eql ['/some/path', 123, 15]
 
-        return if not slash.win()
-        
         (slash.splitFileLine 'c:/some/path:123').should.eql ['c:/some/path', 123, 0]
 
         (slash.splitFileLine 'c:/some/path:123:15').should.eql ['c:/some/path', 123, 15]
@@ -274,7 +299,7 @@ describe 'kslash', ->
     #      000  000        000      000     000     000       000  000      000       000        000   000       000  
     # 0000000   000        0000000  000     000     000       000  0000000  00000000  000         0000000   0000000   
     
-    it 'splitFilePos', ->
+    it 'splitFilePos' ->
 
         (slash.splitFilePos '/some/path').should.eql ['/some/path', [0, 0]]
 
@@ -282,8 +307,6 @@ describe 'kslash', ->
 
         (slash.splitFilePos '/some/path:123:15').should.eql ['/some/path', [15, 122]]
 
-        return if not slash.win()
-        
         (slash.splitFilePos 'c:/some/path:123').should.eql ['c:/some/path', [0, 122]]
 
         (slash.splitFilePos 'c:/some/path:123:15').should.eql ['c:/some/path', [15, 122]]
@@ -294,7 +317,7 @@ describe 'kslash', ->
     # 000   000  000   000  000  000  0000  000       000  000      000       000        000   000       000  
     #  0000000    0000000   000  000   000  000       000  0000000  00000000  000         0000000   0000000   
     
-    it 'joinFilePos', ->
+    it 'joinFilePos' ->
 
         (slash.joinFilePos '/some/path', [0,0]).should.eql '/some/path:1'
 
@@ -316,7 +339,7 @@ describe 'kslash', ->
     # 000   000  000   000  000  000  0000  000       000  000      000       000      000  000  0000  000       
     #  0000000    0000000   000  000   000  000       000  0000000  00000000  0000000  000  000   000  00000000  
     
-    it 'joinFileLine', ->
+    it 'joinFileLine' ->
 
         (slash.joinFileLine '/some/path', 1).should.eql '/some/path:1'
 
@@ -338,7 +361,7 @@ describe 'kslash', ->
     # 000        000 000   000       000     000          000  
     # 00000000  000   000  000  0000000      000     0000000   
     
-    it 'exists', ->
+    it 'exists' ->
 
         (slash.exists __dirname).should.exist
 
@@ -358,13 +381,13 @@ describe 'kslash', ->
             expect(stat).to.not.exist
             done()
             
-    it 'fileExists', ->
+    it 'fileExists' ->
 
         (slash.fileExists __filename).should.exist
 
         expect(slash.fileExists __dirname).to.not.exist
         
-    it 'dirExists', ->
+    it 'dirExists' ->
         
         (slash.dirExists __dirname).should.exist
 
@@ -376,7 +399,7 @@ describe 'kslash', ->
     # 000        000  000   000   000  
     # 000        000   000   0000000   
     
-    it 'pkg', ->
+    it 'pkg' ->
         
         (slash.pkg __dirname).should.exist
 
@@ -392,7 +415,7 @@ describe 'kslash', ->
     # 000       000  000   000  000       000      000   000     000     000     000     000       
     # 000  0000000   000   000  00000000  0000000  000   000     000     000      0      00000000  
     
-    it 'isRelative', ->
+    it 'isRelative' ->
         
         (slash.isRelative __dirname).should.eql false
         
@@ -402,10 +425,12 @@ describe 'kslash', ->
         
         (slash.isRelative '.././bla../../fark').should.eql true
 
-        return if not slash.win()
-        
         (slash.isRelative 'C:\\blafark').should.eql false
 
+        (slash.isRelative 'C:\\').should.eql false
+        (slash.isRelative 'C:/').should.eql false
+        (slash.isRelative 'C:').should.eql false
+                
         (slash.isRelative '..\\blafark').should.eql true
         
     #  0000000   0000000   000   000  000  000000000  000  0000000  00000000  
@@ -414,7 +439,7 @@ describe 'kslash', ->
     #      000  000   000  000  0000  000     000     000   000     000       
     # 0000000   000   000  000   000  000     000     000  0000000  00000000  
     
-    it 'sanitize', ->
+    it 'sanitize' ->
         
         (slash.sanitize 'a.b\n').should.eql 'a.b'
 
@@ -426,7 +451,7 @@ describe 'kslash', ->
     # 000       000     000     000        000 000      000     
     # 000  0000000      000     00000000  000   000     000     
     
-    it 'isText', ->
+    it 'isText' ->
         
         (slash.isText __dirname + '../package.noon').should.eql true
 
@@ -438,7 +463,7 @@ describe 'kslash', ->
     # 000   000  000       000   000  000   000     000     000        000 000      000     
     # 000   000  00000000  000   000  0000000       000     00000000  000   000     000     
     
-    it 'readText', ->
+    it 'readText' ->
         
         (slash.readText __dirname + '/../package.noon').split('\n')[0].should.eql 'name            kslash'
 
