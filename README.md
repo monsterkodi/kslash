@@ -122,7 +122,7 @@ slash.splitExt(p)               ▸ ['C:/dir/file', 'txt']
 
 ```coffeescript
 p = 'C:\\dir/file.txt'
-slash.splitDrive(p)             ▸ ['/dir/file', 'c']
+slash.splitDrive(p)             ▸ ['/dir/file.txt', 'c']
 ```
 
 ## splitFileLine(p) 
@@ -183,7 +183,7 @@ Replaces `$...` with matching environment variables
 
 ```coffeescript
 p = '$HOME/dir'
-slash.unenv(p)                  ▸ /Users/kodi/dir
+slash.unenv(p)                  ▸ C:/Users/kodi/dir
 ```
 
 ## relative(p, to) 
@@ -198,14 +198,23 @@ slash.relative(p,to)            ▸ '../../path.txt'
 
 Resolves p and q and compares the results.
 
-## win()
 ## encode(p) 
 
 Encodes p for use as an URL.
 
+```coffeescript
+p = '/dir/a # b' 
+slash.encode(p)                 ▸ '/dir/a%20%23%20b'
+```
+
 ## fileUrl(p) 
 
 Encodes p and prefixes it with 'file://'
+
+```coffeescript
+p = '/dir/a # b' 
+slash.fileUrl(p)                ▸ 'file:///dir/a%20%23%20b'
+```
 
 ## pkg(p)
 
@@ -217,7 +226,7 @@ Same as `pkg`, just looking for `.git` directory instead.
 
 ## touch(p)
 
-Like the unix command, creates intermediate directories if they dont exist.
+Like the unix command, creates intermediate directories if they don't exist.
 
 ## exists(p, cb)
 
@@ -227,11 +236,17 @@ The callback is optional.
 If provided, functionality will be executed synchronously and the callback will be called with result.
 The same is true for the following functions that have a callback argument:
 
-## isDir(p, cb)
-## isFile(p, cb)
-## fileExists(p, cb)
-## dirExists(p, cb)
-## isWritable(p, cb) 
+## isDir(p, cb) dirExists(p, cb)
+
+Returns stat of path p if it is a directory, null otherwise.
+
+## isFile(p, cb) fileExists(p, cb)
+
+Returns stat of path p if it is a file, null otherwise.
+
+## isWritable(p, cb)
+
+Returns true if p is writable.
 
 ## isText(p)
 
