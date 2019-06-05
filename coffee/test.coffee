@@ -161,9 +161,10 @@ describe 'kslash' ->
     
     it 'unslash' ->
         
-        return if not slash.win()
-
-        (slash.unslash '/c/test').should.eql 'C:\\test'
+        if not slash.win()
+            (slash.unslash '/c/test').should.eql '/c/test'
+        else
+            (slash.unslash '/c/test').should.eql 'C:\\test'
         
     # 00000000   00000000   0000000   0000000   000      000   000  00000000  
     # 000   000  000       000       000   000  000      000   000  000       
