@@ -197,7 +197,7 @@ slash.unenv(p)                  ▸ C:/Users/kodi/dir
 ```coffeescript
 p = 'C:/test/some/path.txt' 
 to ='C:/test/some/other/path'
-slash.relative(p,to)            ▸ '../../path.txt'
+slash.relative(p,to)            ▸ ../../path.txt
 ```
 
 ## samePath(p, q) 
@@ -210,7 +210,7 @@ Encodes p for use as an URL.
 
 ```coffeescript
 p = '/dir/a # b' 
-slash.encode(p)                 ▸ '/dir/a%20%23%20b'
+slash.encode(p)                 ▸ /dir/a%20%23%20b
 ```
 
 ## fileUrl(p) 
@@ -219,7 +219,7 @@ Encodes p and prefixes it with 'file://'
 
 ```coffeescript
 p = '/dir/a # b' 
-slash.fileUrl(p)                ▸ 'file:///dir/a%20%23%20b'
+slash.fileUrl(p)                ▸ file:///dir/a%20%23%20b
 ```
 
 ## pkg(p)
@@ -279,8 +279,8 @@ Same as the functions of the `path` module but p is `sanitized` and `slashed` fi
 
 ## Doesn't throw
 
-All functions return an empty string or null if the provided path is an empty string, null or undefined 
-or if an fs-function throws an error.
+All functions return an empty string or null if the provided path is an empty string, null or undefined.
+The same is true, if an underlying function call throws an error.
 
 If this is too lax for your taste, or you want to debug your code, you can redefine the function `slash.error`:
 
