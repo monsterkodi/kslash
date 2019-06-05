@@ -247,11 +247,11 @@ slash.exists p, (stat) -> if stat then # ...
 
 ## isDir(p, cb) dirExists(p, cb)
 
-Returns stat of path p if it is a directory, null otherwise.
+Returns [stat](https://nodejs.org/dist/latest/docs/api/fs.html#fs_class_fs_stats) of path p if it is a directory, null otherwise.
 
 ## isFile(p, cb) fileExists(p, cb)
 
-Returns stat of path p if it is a file, null otherwise.
+Returns [stat](https://nodejs.org/dist/latest/docs/api/fs.html#fs_class_fs_stats) of path p if it is a file, null otherwise.
 
 ## isWritable(p, cb)
 
