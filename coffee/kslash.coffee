@@ -146,7 +146,7 @@ class Slash
             p = p[...p.length-1] 
         list = [p]
         while Slash.dir(p) != ''
-            list.unshift Slash.dir(p)
+            list.unshift Slash.dir p
             p = Slash.dir p
         list
         
@@ -177,7 +177,10 @@ class Slash
         if Slash.isRoot p then return ''
         p = path.dirname p
         if p == '.' then return ''
-        Slash.path p
+        p = Slash.path p
+        if p.endsWith(':') and p.length == 2
+            p += '/'
+        p
         
     @sanitize: (p) -> 
         
