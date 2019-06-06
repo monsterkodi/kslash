@@ -20,10 +20,16 @@ class Slash
     
     @path: (p) ->
         return Slash.error "Slash.path -- no path?" if not p?.length
-        p = p.replace Slash.reg, '/'
-        p = path.normalize p
+        if Slash.win()
+            p = path.normalize p     
+            p = p.replace Slash.reg, '/'
+            if p.endsWith(':.') and p.length == 3
+                p = p[..1]
+        else
+            p = p.replace Slash.reg, '/'
+            p = path.normalize p            
         p
-
+        
     @unslash: (p) ->
         return Slash.error "Slash.unslash -- no path?" if not p?.length
         p = Slash.path p

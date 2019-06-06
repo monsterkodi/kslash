@@ -4,12 +4,54 @@
 #    000     000            000     000
 #    000     00000000  0000000      000
 
-▸profile slash = require '../'
+slash = require '../'
 chai = require 'chai'
 chai.should()
 expect = chai.expect
 
 describe 'kslash' ->
+    
+    # 00000000    0000000   000000000  000   000  
+    # 000   000  000   000     000     000   000  
+    # 00000000   000000000     000     000000000  
+    # 000        000   000     000     000   000  
+    # 000        000   000     000     000   000  
+    
+    it 'path' ->
+        
+        (slash.path "C:\\").should.eql "C:/"
+        
+        (slash.path "C:/").should.eql "C:/"
+        
+        (slash.path "C://").should.eql "C:/"
+        
+        (slash.path "C:").should.eql "C:"
+        
+        (slash.path "C:\\Back\\Slash\\Crap").should.eql "C:/Back/Slash/Crap"
+        
+        (slash.path "C:\\Back\\Slash\\Crap\\..\\..\\To\\The\\..\\Future").should.eql "C:/Back/To/Future"
+ 
+    # 00000000   00000000  00     00   0000000   000   000  00000000  0000000    00000000   000  000   000  00000000  
+    # 000   000  000       000   000  000   000  000   000  000       000   000  000   000  000  000   000  000       
+    # 0000000    0000000   000000000  000   000   000 000   0000000   000   000  0000000    000   000 000   0000000   
+    # 000   000  000       000 0 000  000   000     000     000       000   000  000   000  000     000     000       
+    # 000   000  00000000  000   000   0000000       0      00000000  0000000    000   000  000      0      00000000  
+    
+    it 'removeDrive' ->
+        
+        (slash.removeDrive '/some/path').should.eql '/some/path'
+
+        (slash.removeDrive 'c:/some/path').should.eql '/some/path'
+
+        (slash.removeDrive 'c:\\some\\path').should.eql '/some/path'
+
+        (slash.removeDrive 'c:/').should.eql '/'
+
+        (slash.removeDrive 'c:\\').should.eql '/'
+        
+        (slash.removeDrive 'c:').should.eql '/'
+        
+        (slash.removeDrive '/').should.eql '/'
     
     # 000   0000000  00000000    0000000    0000000   000000000  
     # 000  000       000   000  000   000  000   000     000     
@@ -25,7 +67,7 @@ describe 'kslash' ->
         (slash.isRoot '/a').should.eql false
         (slash.isRoot 'c:/a').should.eql false
         (slash.isRoot 'C:\\a').should.eql false
-    
+
     # 0000000    000  00000000   
     # 000   000  000  000   000  
     # 000   000  000  0000000    
@@ -42,25 +84,19 @@ describe 'kslash' ->
         (slash.dir '/some/').should.eql '/'
         (slash.dir '/some').should.eql '/'
         
-        
-        (slash.dir 'C:/Back').should.eql 'C:'
-        (slash.dir 'D:\\Back').should.eql 'D:'
+        (slash.dir 'C:/Back').should.eql 'C:/'
+        (slash.dir 'D:\\Back').should.eql 'D:/'
         
         (slash.dir '../..').should.eql '..'
-
-        (slash.dir '/').should.eql ''
-
+        
         (slash.dir '.').should.eql ''
-        
         (slash.dir '..').should.eql ''
-        
-        (slash.dir '~').should.eql ''
-
         (slash.dir './').should.eql ''
-        
         (slash.dir '../').should.eql ''
         
+        (slash.dir '~').should.eql ''
         (slash.dir '~/').should.eql ''
+        (slash.dir '/').should.eql ''
         
         (slash.dir 'C:/').should.eql ''
         (slash.dir 'C:/').should.eql ''
@@ -79,8 +115,8 @@ describe 'kslash' ->
         (slash.pathlist '.').should.eql ['.']
         (slash.pathlist '').should.eql []
         
-        (slash.pathlist 'C:\\Back\\Slash\\').should.eql ['C:', 'C:/Back', 'C:/Back/Slash']
-        (slash.pathlist 'C:/Slash').should.eql ['C:', 'C:/Slash']
+        (slash.pathlist 'C:\\Back\\Slash\\').should.eql ['C:/', 'C:/Back', 'C:/Back/Slash']
+        (slash.pathlist 'C:/Slash').should.eql ['C:/', 'C:/Slash']
         (slash.pathlist '/c/Slash').should.eql ['/', '/c', '/c/Slash']
         (slash.pathlist '\\d\\Slash').should.eql ['/', '/d', '/d/Slash']
 
@@ -96,18 +132,7 @@ describe 'kslash' ->
         
         (slash.base '/some/path.txt').should.eql 'path'
             
-    # 00000000    0000000   000000000  000   000  
-    # 000   000  000   000     000     000   000  
-    # 00000000   000000000     000     000000000  
-    # 000        000   000     000     000   000  
-    # 000        000   000     000     000   000  
-    
-    it 'path' ->
-        
-        (slash.path "C:\\Back\\Slash\\Crap").should.eql "C:/Back/Slash/Crap"
-        
-        (slash.path "C:\\Back\\Slash\\Crap\\..\\..\\To\\The\\..\\Future").should.eql "C:/Back/To/Future"
-        
+       
     #       000   0000000   000  000   000  
     #       000  000   000  000  0000  000  
     #       000  000   000  000  000 0 000  
@@ -256,26 +281,6 @@ describe 'kslash' ->
         
         (slash.splitDrive 'c:').should.eql ['/', 'c']
         
-    # 00000000   00000000  00     00   0000000   000   000  00000000  0000000    00000000   000  000   000  00000000  
-    # 000   000  000       000   000  000   000  000   000  000       000   000  000   000  000  000   000  000       
-    # 0000000    0000000   000000000  000   000   000 000   0000000   000   000  0000000    000   000 000   0000000   
-    # 000   000  000       000 0 000  000   000     000     000       000   000  000   000  000     000     000       
-    # 000   000  00000000  000   000   0000000       0      00000000  0000000    000   000  000      0      00000000  
-    
-    it 'removeDrive' ->
-        
-        (slash.removeDrive '/some/path').should.eql '/some/path'
-
-        (slash.removeDrive 'c:/some/path').should.eql '/some/path'
-
-        (slash.removeDrive 'c:\\some\\path').should.eql '/some/path'
-
-        (slash.removeDrive 'c:/').should.eql '/'
-
-        (slash.removeDrive 'c:\\').should.eql '/'
-        
-        (slash.removeDrive 'c:').should.eql '/'
-
     #  0000000  00000000   000      000  000000000  00000000  000  000      00000000  000      000  000   000  00000000  
     # 000       000   000  000      000     000     000       000  000      000       000      000  0000  000  000       
     # 0000000   00000000   000      000     000     000000    000  000      0000000   000      000  000 0 000  0000000   
