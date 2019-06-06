@@ -142,7 +142,8 @@ class Slash
             return []
             
         p = Slash.normalize p
-        p = p[...p.length-1] if p.length > 1 and  p[p.length-1] == '/'
+        if p.length > 1 and p[p.length-1] == '/' and p[p.length-2] != ':'
+            p = p[...p.length-1] 
         list = [p]
         while Slash.dir(p) != ''
             list.unshift Slash.dir(p)
