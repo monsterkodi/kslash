@@ -8,7 +8,7 @@
   ],
   "main": "js/kslash.js",
   "files": [
-    "js"
+    "js/kslash.js"
   ],
   "scripts": {
     "test": "./node_modules/.bin/mocha -c --require koffee/js/register ./coffee/test.coffee",
@@ -24,7 +24,7 @@
   "author": "monsterkodi",
   "license": "Unlicense",
   "dependencies": {
-    "isbinaryfile": "^4.0.0",
+    "isbinaryfile": "^4.0.1",
     "textextensions": "^2.4.0"
   },
   "devDependencies": {
