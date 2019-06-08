@@ -419,11 +419,12 @@ class Slash
                 Slash.textext = {}
                 for ext in require 'textextensions'
                     Slash.textext[ext] = true
-                Slash.textext['crypt']  = true
+                Slash.textext['crypt'] = true
             
             ext = Slash.ext p
             return true if ext and Slash.textext[ext]? 
-            return true if Slash.textbase[Slash.basename(f).toLowerCase()]
+            return true if Slash.textbase[Slash.basename(p).toLowerCase()]
+            p = Slash.resolve p
             return false if not Slash.isFile p
             isBinary = require 'isbinaryfile'
             return not isBinary.isBinaryFileSync p
