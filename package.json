@@ -1,8 +1,9 @@
 {
   "name": "kslash",
-  "version": "1.11.3",
+  "version": "1.12.0",
   "description": "path tool",
   "keywords": [
+    "slash",
     "path",
     "tool"
   ],
@@ -30,7 +31,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "koffee": "^0.56.0",
+    "koffee": "^1.1.0",
     "mocha": "^6.1.4",
     "onchange": "^6.0.0"
   }
