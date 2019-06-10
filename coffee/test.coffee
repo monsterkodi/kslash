@@ -463,7 +463,7 @@ describe 'kslash' ->
 
         (slash.isText __dirname + '../img/kslash.png').should.eql false
 
-        (slash.isText '~/s/ko/bin/ko').should.eql true
+        # (slash.isText '~/s/ko/bin/ko').should.eql true
                 
     # 00000000   00000000   0000000   0000000    000000000  00000000  000   000  000000000  
     # 000   000  000       000   000  000   000     000     000        000 000      000     
