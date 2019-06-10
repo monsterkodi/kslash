@@ -1,6 +1,6 @@
 {
   "name": "kslash",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "path tool",
   "keywords": [
     "path",
@@ -20,6 +20,9 @@
   },
   "bugs": {
     "url": "https://github.com/monsterkodi/kslash/issues"
+  },
+  "homepage": {
+    "url": "https://www.npmjs.com/package/kslash"
   },
   "author": "monsterkodi",
   "license": "Unlicense",
