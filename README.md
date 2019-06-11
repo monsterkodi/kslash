@@ -304,4 +304,4 @@ slash.error = (msg) -> # throw or log or something else ...
 [david-image]:https://david-dm.org/monsterkodi/kslash/status.svg
 [david-url]:https://david-dm.org/monsterkodi/kslash
 [downloads-image]:https://img.shields.io/npm/dm/kslash.svg
-[downloads-url]:http://npmjs.org/package/kslash
+[downloads-url]:https://www.npmtrends.com/kslash
