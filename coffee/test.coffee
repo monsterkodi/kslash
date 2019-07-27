@@ -486,5 +486,31 @@ describe 'kslash' ->
         slash.readText __dirname + '/dir/filedoesntexist', (text) ->
             text.should.eql ''
             done()
-        
+
+    # 000   000  00000000   000  000000000  00000000  000000000  00000000  000   000  000000000  
+    # 000 0 000  000   000  000     000     000          000     000        000 000      000     
+    # 000000000  0000000    000     000     0000000      000     0000000     00000       000     
+    # 000   000  000   000  000     000     000          000     000        000 000      000     
+    # 00     00  000   000  000     000     00000000     000     00000000  000   000     000     
+    
+    it 'writeText' ->
+        f = slash.join __dirname, 'test.txt'
+        slash.writeText(f, 'hello').should.eql f
+        slash.readText(f).should.eql 'hello'
+        f = slash.join __dirname, 'test.txt', 'subdir'
+        slash.writeText(f, 'hello').should.eql ''
+            
+    it 'writeText callback', (done) ->
+        f = slash.join __dirname, 'test.txt'
+        slash.writeText f, "hello world", (p) ->
+            slash.readText(p).should.eql 'hello world'
+            p.should.eql f
+            done()
+
+    it 'writeText callback fail', (done) ->
+        f = slash.join __dirname, 'test.txt', 'subdir' 
+        slash.writeText f, "nope", (p) ->
+            p.should.eql ''
+            done()
+            
             

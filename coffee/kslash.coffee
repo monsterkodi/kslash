@@ -445,6 +445,30 @@ class Slash
                 fs.readFileSync p, 'utf8'
             catch err
                 return Slash.error "Slash.readText -- " + String(err)
+
+    @writeText: (p, text, cb) ->                
+        tmpfile = Slash.tmpfile()
+        if 'function' == typeof cb
+            try
+                fs.writeFile tmpfile, text, (err) ->
+                    if err? then cb '' 
+                    else
+                        fs.rename tmpfile, p, (err) ->
+                            if err? then cb ''
+                            else cb p
+                            fs.unlink tmpfile, ->
+            catch err
+                cb Slash.error "Slash.readText -- " + String(err)
+        else
+            try
+                fs.writeFileSync tmpfile, text
+                fs.renameSync tmpfile, p
+                fs.unlink tmpfile, ->
+                return p
+            catch err
+                return Slash.error "Slash.readText -- " + String(err)
+        
+    @tmpfile: -> require('tmp-filepath')()
                 
     # 00000000   00000000   0000000         000   000  000  000   000        00000000  00000000   00000000   
     # 000   000  000       000              000 0 000  000  0000  000        000       000   000  000   000  
