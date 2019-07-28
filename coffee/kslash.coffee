@@ -11,6 +11,8 @@ fs   = require 'fs'
 path = require 'path'
 
 class Slash
+    
+    @logErrors: false
 
     # 00000000    0000000   000000000  000   000  
     # 000   000  000   000     000     000   000  
@@ -483,6 +485,8 @@ class Slash
 
     @win: -> path.sep == '\\'
     
-    @error: (msg) -> console.log msg; ''
+    @error: (msg) -> 
+        if @logErrors then error msg 
+        ''
 
 module.exports = Slash
