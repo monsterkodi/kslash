@@ -437,36 +437,39 @@ class Slash
         if 'function' == typeof cb
             try
                 fs.readFile p, 'utf8', (err, text) -> 
-                    cb not err? and text or ''
+                    cb not err and text or ''
             catch err
-                return Slash.error "Slash.readText -- " + String(err)
+                cb Slash.error "Slash.readText -- " + String(err)
         else
             try
                 fs.readFileSync p, 'utf8'
             catch err
-                return Slash.error "Slash.readText -- " + String(err)
+                Slash.error "Slash.readText -- " + String(err)
 
-    @writeText: (p, text, cb) ->                
+    @writeText: (p, text, cb) ->
+        
         tmpfile = Slash.tmpfile()
+        
         if 'function' == typeof cb
             try
                 fs.writeFile tmpfile, text, (err) ->
-                    if err? then cb '' 
+                    if err 
+                        cb Slash.error "Slash.writeText - " + String(err)
                     else
                         fs.rename tmpfile, p, (err) ->
-                            if err? then cb ''
+                            if err then cb Slash.error "Slash.writeText -- " + String(err)
                             else cb p
                             fs.unlink tmpfile, ->
             catch err
-                cb Slash.error "Slash.readText -- " + String(err)
+                cb Slash.error "Slash.writeText --- " + String(err)
         else
             try
                 fs.writeFileSync tmpfile, text
                 fs.renameSync tmpfile, p
                 fs.unlink tmpfile, ->
-                return p
+                p
             catch err
-                return Slash.error "Slash.readText -- " + String(err)
+                Slash.error "Slash.writeText -- " + String(err)
         
     @tmpfile: -> require('tmp-filepath')()
                 
@@ -480,6 +483,6 @@ class Slash
 
     @win: -> path.sep == '\\'
     
-    @error: (msg) -> ''
+    @error: (msg) -> console.log msg; ''
 
 module.exports = Slash
