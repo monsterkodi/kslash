@@ -454,14 +454,19 @@ class Slash
         
         if 'function' == typeof cb
             try
-                fs.writeFile tmpfile, text, (err) ->
-                    if err 
-                        cb Slash.error "Slash.writeText - " + String(err)
-                    else
-                        fs.rename tmpfile, p, (err) ->
-                            if err then cb Slash.error "Slash.writeText -- " + String(err)
-                            else cb p
-                            fs.unlink tmpfile, ->
+                @fileExists p, (stat) ->  
+                    
+                    mode = stat?.mode ? 0o666
+    
+                    fs.writeFile tmpfile, text, mode:mode, (err) ->
+                        if err 
+                            cb Slash.error "Slash.writeText - " + String(err)
+                        else
+                            fs.rename tmpfile, p, (err) ->
+                                if err then cb Slash.error "Slash.writeText -- " + String(err)
+                                else cb p
+                                fs.unlink tmpfile, ->
+    
             catch err
                 cb Slash.error "Slash.writeText --- " + String(err)
         else
