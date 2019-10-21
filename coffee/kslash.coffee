@@ -7,7 +7,7 @@
 ###
 
 os   = require 'os'
-fs   = require 'fs' 
+fs   = require 'fs-extra' 
 path = require 'path'
 
 class Slash
@@ -462,7 +462,7 @@ class Slash
                         if err 
                             cb Slash.error "Slash.writeText - " + String(err)
                         else
-                            fs.rename tmpfile, p, (err) ->
+                            fs.move tmpfile, p, overwrite:true, (err) ->
                                 if err then cb Slash.error "Slash.writeText -- " + String(err)
                                 else cb p
                                 fs.unlink tmpfile, ->
@@ -472,7 +472,7 @@ class Slash
         else
             try
                 fs.writeFileSync tmpfile, text
-                fs.renameSync tmpfile, p
+                fs.moveSync tmpfile, p, overwrite:true
                 fs.unlink tmpfile, ->
                 p
             catch err
