@@ -465,15 +465,12 @@ class Slash
                             fs.move tmpfile, p, overwrite:true, (err) ->
                                 if err then cb Slash.error "Slash.writeText -- " + String(err)
                                 else cb p
-                                fs.unlink tmpfile, ->
-    
             catch err
                 cb Slash.error "Slash.writeText --- " + String(err)
         else
             try
                 fs.writeFileSync tmpfile, text
                 fs.moveSync tmpfile, p, overwrite:true
-                fs.unlink tmpfile, ->
                 p
             catch err
                 Slash.error "Slash.writeText -- " + String(err)
