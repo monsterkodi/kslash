@@ -27,6 +27,8 @@ class Slash
             p = p.replace Slash.reg, '/'
             if p.endsWith(':.') and p.length == 3
                 p = p[..1]
+            if p.endsWith(':') and p.length == 2
+                p = p + '/'
         else
             p = p.replace Slash.reg, '/'
             p = path.normalize p            
@@ -236,6 +238,8 @@ class Slash
         
         if Slash.isRelative p
             p = Slash.path path.resolve p
+        else
+            p = Slash.path p
         p
     
     @relative: (rel, to) ->
