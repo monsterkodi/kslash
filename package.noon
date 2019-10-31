@@ -1,5 +1,5 @@
 name            kslash
-version         1.20.0
+version         1.21.0
 description     path tool
 keywords
                 slash
@@ -8,6 +8,7 @@ keywords
 main            js/kslash.js
 files
                 js/kslash.js
+                js/dirlist.js
 scripts
                 test    ./node_modules/.bin/mocha -c --require koffee/js/register ./coffee/test.coffee
                 watch   ./node_modules/.bin/onchange coffee/*.coffee -- npm run test
@@ -24,6 +25,7 @@ dependencies
                 isbinaryfile    ^4.0.2
                 textextensions  ^2.5.0
                 tmp-filepath    ^2.0.0
+                walkdir         ^0.4.1
 devDependencies
                 chai      ^4.2.0
                 koffee    ^1.4.0

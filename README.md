@@ -233,6 +233,12 @@ Same as `pkg`, just looking for `.git` directory instead.
 
 Like the unix command, creates intermediate directories if they don't exist.
 
+## listdir(p,opt,cb)
+## list(p,opt,cb)
+
+Calls back with a list of info objects for items in directory p.
+A small wrapper around the `walkdir` package.
+
 ## exists(p, cb)
 
 Returns [stat](https://nodejs.org/dist/latest/docs/api/fs.html#fs_class_fs_stats) of path p if it exists, null otherwise.

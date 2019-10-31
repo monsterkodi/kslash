@@ -504,15 +504,55 @@ describe 'kslash' ->
             
     it 'writeText callback' (done) ->
         f = slash.join __dirname, 'test.txt'
-        slash.writeText f, "hello world", (p) ->
+        slash.writeText f, "hello world" (p) ->
             slash.readText(p).should.eql 'hello world'
             p.should.eql f
             done()
 
     it 'writeText callback fail' (done) ->
         f = slash.join __dirname, 'test.txt' 'subdir' 
-        slash.writeText f, "nope", (p) ->
+        slash.writeText f, "nope" (p) ->
             p.should.eql ''
             done()
             
+    # 0000000    000  00000000   000      000   0000000  000000000  
+    # 000   000  000  000   000  000      000  000          000     
+    # 000   000  000  0000000    000      000  0000000      000     
+    # 000   000  000  000   000  000      000       000     000     
+    # 0000000    000  000   000  0000000  000  0000000      000     
+
+    it 'dirlist' (done) ->
+        
+        process.chdir __dirname
+        slash.list (items) ->
+            items.map((i) -> i.file).should.include slash.path __filename
+            done()
+    
+    it 'dirlist ""' (done) ->
+        
+        process.chdir __dirname
+        slash.list '' (items) ->
+            items.map((i) -> i.file).should.include slash.path __filename
+            done()
+
+    it 'dirlist .' (done) ->
+        
+        process.chdir __dirname
+        slash.list '.' (items) ->
+            items.map((i) -> i.file).should.include slash.path __filename
+            done()
+            
+    it 'dirlist fail' (done) ->
+        
+        process.chdir __dirname
+        slash.list 'fail' (items) ->
+            items.should.eql []
+            done()
+    
+    it 'dirlist ..' (done) ->
+        
+        process.chdir __dirname
+        slash.list '..' (items) ->
+            items.map((i) -> i.file).should.include slash.resolve "#{__dirname}/../package.noon"
+            done()
             
