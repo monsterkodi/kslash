@@ -545,7 +545,7 @@ describe 'kslash' ->
     it 'dirlist fail' (done) ->
         
         process.chdir __dirname
-        slash.list 'fail' (items) ->
+        slash.list 'fail' logError:no, (items) ->
             items.should.eql []
             done()
     
