@@ -530,29 +530,52 @@ describe 'kslash' ->
     
     it 'dirlist ""' (done) ->
         
-        process.chdir __dirname
         slash.list '' (items) ->
             items.map((i) -> i.file).should.include slash.path __filename
             done()
 
     it 'dirlist .' (done) ->
         
-        process.chdir __dirname
         slash.list '.' (items) ->
             items.map((i) -> i.file).should.include slash.path __filename
             done()
             
     it 'dirlist fail' (done) ->
         
-        process.chdir __dirname
         slash.list 'fail' logError:no, (items) ->
             items.should.eql []
             done()
     
     it 'dirlist ..' (done) ->
         
-        process.chdir __dirname
         slash.list '..' (items) ->
             items.map((i) -> i.file).should.include slash.resolve "#{__dirname}/../package.noon"
             done()
+            
+    #  0000000  000   000  000   000   0000000    
+    # 000        000 000   0000  000  000         
+    # 0000000     00000    000 0 000  000         
+    #      000     000     000  0000  000         
+    # 0000000      000     000   000   0000000    
+
+    it 'dirlist sync' ->
+        
+        slash.list().map((i) -> i.file).should.include slash.path __filename
+    
+    it 'dirlist sync ""' ->
+        
+        slash.list('').map((i) -> i.file).should.include slash.path __filename
+
+    it 'dirlist sync .' ->
+        
+        slash.list('.').map((i) -> i.file).should.include slash.path __filename
+            
+    it 'dirlist sync fail' ->
+        
+        slash.list('fail' logError:no).should.eql []
+    
+    it 'dirlist sync ..' ->
+        
+        slash.list('..').map((i) -> i.file).should.include slash.resolve "#{__dirname}/../package.noon"
+            
             

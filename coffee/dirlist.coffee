@@ -27,9 +27,10 @@ dirList = (dirPath, opt, cb) ->
         cb = dirPath  # only a callback is provided
         dirPath = '.' # list the current dir
     else
-        cb ?= opt.cb
         if typeof(opt) == 'function' and not cb? 
             cb = opt
+        else
+            cb ?= opt?.cb
     opt ?= {}
     
     opt.textTest     ?= false
@@ -80,16 +81,32 @@ dirList = (dirPath, opt, cb) ->
             if opt.textTest
                 file.textFile = true if slash.isText f
             files.push file
+        
+    fileSort = (a,b) -> a.name.localeCompare b.name
+    
+    if typeof(cb) == 'function' # async
+            
+        try
+            walker = walkdir.walk dirPath, no_recurse:true
+            walker.on 'directory' onDir
+            walker.on 'file'      onFile
+            walker.on 'end'         -> cb dirs.sort(fileSort).concat files.sort(fileSort)
+            walker.on 'error' (err) -> error err if opt.logError
+            walker
+        catch err
+            error err if opt.logError
+            
+    else # sync
 
-    try
-        fileSort = (a,b) -> a.name.localeCompare b.name
-        walker = walkdir.walk dirPath, no_recurse: true
-        walker.on 'directory' onDir
-        walker.on 'file'      onFile
-        walker.on 'end'         -> cb dirs.sort(fileSort).concat files.sort(fileSort)
-        walker.on 'error' (err) -> error err if opt.logError
-        walker
-    catch err
-        error err if opt.logError
+        try
+            walkdir.sync dirPath, no_recurse:true, (p,stat) ->
+                if stat.isDirectory()
+                    onDir p,stat
+                else
+                    onFile p,stat
+            dirs.sort(fileSort).concat files.sort(fileSort)
+        catch err
+            error err if opt.logError
+            []
         
 module.exports = dirList
