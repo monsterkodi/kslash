@@ -233,8 +233,7 @@ Same as `pkg`, just looking for `.git` directory instead.
 
 Like the unix command, creates intermediate directories if they don't exist.
 
-## listdir(p,opt,cb)
-## list(p,opt,cb)
+## list(p,opt,cb) listdir(p,opt,cb)
 
 Calls back with a list of info objects for items in directory p.
 A small wrapper around the `walkdir` package.

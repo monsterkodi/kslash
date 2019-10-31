@@ -8,8 +8,6 @@
 
 slash = require './kslash'
 
-#   directory list
-#
 #   calls back with a list of objects for files and directories in dirPath
 #       [
 #           type: file|dir
@@ -34,6 +32,7 @@ dirList = (dirPath, opt, cb) ->
             cb = opt
     opt ?= {}
     
+    opt.textTest     ?= false
     opt.ignoreHidden ?= true
     opt.logError     ?= true
     dirs    = []
@@ -78,6 +77,8 @@ dirList = (dirPath, opt, cb) ->
                 file: slash.path f
                 name: slash.basename f
                 stat: stat
+            if opt.textTest
+                file.textFile = true if slash.isText f
             files.push file
 
     try
@@ -86,9 +87,9 @@ dirList = (dirPath, opt, cb) ->
         walker.on 'directory' onDir
         walker.on 'file'      onFile
         walker.on 'end'         -> cb dirs.sort(fileSort).concat files.sort(fileSort)
-        walker.on 'error' (err) -> error err
+        walker.on 'error' (err) -> error err if opt.logError
         walker
     catch err
-        error err
+        error err if opt.logError
         
 module.exports = dirList
