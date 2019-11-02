@@ -278,9 +278,7 @@ Removes leading and trailing newlines from path p.
 
 ## win()
 
-Returns true if path.sep is '/'. 
-Reasonable heuristic to check if code is running on a Windows box:
-on `wsl` os.platform() returns 'linux', but path.sep is still '/'.
+Returns true if path.sep is '\\'. 
 
 ## isAbsolute(p) isRelative(p) normalize(p) dirname(p) extname(p) basename(p, ext) parse(p) join()
 
