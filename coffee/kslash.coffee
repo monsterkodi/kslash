@@ -25,13 +25,13 @@ class Slash
         if Slash.win()
             p = path.normalize p     
             p = p.replace Slash.reg, '/'
-            if p.endsWith(':.') and p.length == 3
-                p = p[..1]
-            if p.endsWith(':') and p.length == 2
-                p = p + '/'
         else
             p = p.replace Slash.reg, '/'
             p = path.normalize p            
+        if p.endsWith(':.') and p.length == 3
+            p = p[..1]
+        if p.endsWith(':') and p.length == 2
+            p = p + '/'
         p
         
     @unslash: (p) ->
