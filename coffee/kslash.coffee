@@ -344,9 +344,11 @@ class Slash
         null     
         
     @touch: (p) ->
-        
+
         try
-            fs.mkdirSync Slash.dirname(p), recursive:true
+            dir = Slash.dir p
+            if not Slash.isDir dir
+                fs.mkdirSync dir, recursive:true
             if not Slash.fileExists p
                 fs.writeFileSync p, ''
             return p
