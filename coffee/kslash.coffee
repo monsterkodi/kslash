@@ -365,7 +365,7 @@ class Slash
         else
             if stat = Slash.exists p
                 return stat if stat.isFile()
-
+                
     @dirExists: (p, cb) ->
 
         if 'function' == typeof cb
@@ -376,6 +376,40 @@ class Slash
             if stat = Slash.exists p
                 return stat if stat.isDirectory()
             
+    # 000   000  000   000  000   000   0000000  00000000  0000000    
+    # 000   000  0000  000  000   000  000       000       000   000  
+    # 000   000  000 0 000  000   000  0000000   0000000   000   000  
+    # 000   000  000  0000  000   000       000  000       000   000  
+    #  0000000   000   000   0000000   0000000   00000000  0000000    
+    
+    @unused: (p, cb) ->
+        
+        name = Slash.base p
+        dir  = Slash.dir p
+        ext  = Slash.ext p
+        ext  = ext and '.'+ext or ''
+        
+        if /\d\d$/.test name
+            name = name.slice 0, name.length-3
+        
+        if 'function' == typeof cb
+            i = 1
+            test = ''
+            check = ->
+                test = Slash.join dir, "#{name}#{"#{i}".padStart(2 '0')}#{ext}"
+                Slash.exists test, (stat) ->
+                    if stat
+                        i += 1
+                        check()
+                    else
+                        cb test
+            check()
+        else
+            for i in [1..1000]
+                test = Slash.join dir, "#{name}#{"#{i}".padStart(2 '0')}#{ext}"
+                if not Slash.exists test
+                    return test
+                
     @isDir:  (p, cb) -> Slash.dirExists p, cb
     @isFile: (p, cb) -> Slash.fileExists p, cb
     

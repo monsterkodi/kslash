@@ -578,4 +578,14 @@ describe 'kslash' ->
         
         slash.list('..').map((i) -> i.file).should.include slash.resolve "#{__dirname}/../package.noon"
             
-            
+       
+    # 000   000  000   000  000   000   0000000  00000000  0000000      
+    # 000   000  0000  000  000   000  000       000       000   000    
+    # 000   000  000 0 000  000   000  0000000   0000000   000   000    
+    # 000   000  000  0000  000   000       000  000       000   000    
+    #  0000000   000   000   0000000   0000000   00000000  0000000      
+    
+    it 'unused sync' ->
+        
+        slash.unused("#{__dirname}/../package.noon").should.eql slash.resolve "#{__dirname}/../package01.noon"
+    
