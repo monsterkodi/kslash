@@ -342,20 +342,7 @@ class Slash
                         return null
                     Slash.error "Slash.exists -- " + String(err) 
         null     
-        
-    @touch: (p) ->
-
-        try
-            dir = Slash.dir p
-            if not Slash.isDir dir
-                fs.mkdirSync dir, recursive:true
-            if not Slash.fileExists p
-                fs.writeFileSync p, ''
-            return p
-        catch err
-            Slash.error "Slash.touch -- " + String(err) 
-            false
-        
+                
     @fileExists: (p, cb) ->
         
         if 'function' == typeof cb
@@ -376,6 +363,25 @@ class Slash
             if stat = Slash.exists p
                 return stat if stat.isDirectory()
             
+    # 000000000   0000000   000   000   0000000  000   000  
+    #    000     000   000  000   000  000       000   000  
+    #    000     000   000  000   000  000       000000000  
+    #    000     000   000  000   000  000       000   000  
+    #    000      0000000    0000000    0000000  000   000  
+    
+    @touch: (p) ->
+
+        try
+            dir = Slash.dir p
+            if not Slash.isDir dir
+                fs.mkdirSync dir, recursive:true
+            if not Slash.fileExists p
+                fs.writeFileSync p, ''
+            return p
+        catch err
+            Slash.error "Slash.touch -- " + String(err) 
+            false
+                
     # 000   000  000   000  000   000   0000000  00000000  0000000    
     # 000   000  0000  000  000   000  000       000       000   000  
     # 000   000  000 0 000  000   000  0000000   0000000   000   000  
@@ -390,26 +396,40 @@ class Slash
         ext  = ext and '.'+ext or ''
         
         if /\d\d$/.test name
-            name = name.slice 0, name.length-3
+            name = name.slice 0, name.length-2
         
         if 'function' == typeof cb
-            i = 1
-            test = ''
-            check = ->
-                test = Slash.join dir, "#{name}#{"#{i}".padStart(2 '0')}#{ext}"
-                Slash.exists test, (stat) ->
-                    if stat
-                        i += 1
-                        check()
-                    else
-                        cb test
-            check()
+            
+            Slash.exists p, (stat) ->
+                if not stat 
+                    cb Slash.resolve p
+                    return
+                i = 1
+                test = ''
+                check = ->
+                    test = "#{name}#{"#{i}".padStart(2 '0')}#{ext}"
+                    if dir then test = Slash.join dir, test
+                    Slash.exists test, (stat) ->
+                        if stat
+                            i += 1
+                            check()
+                        else
+                            cb Slash.resolve test
+                check()
         else
+            if not Slash.exists(p) then return Slash.resolve p
             for i in [1..1000]
-                test = Slash.join dir, "#{name}#{"#{i}".padStart(2 '0')}#{ext}"
+                test = "#{name}#{"#{i}".padStart(2 '0')}#{ext}"
+                if dir then test = Slash.join dir, test
                 if not Slash.exists test
-                    return test
+                    return Slash.resolve test
                 
+    # 000   0000000                 
+    # 000  000                      
+    # 000  0000000                  
+    # 000       000  000  000  000  
+    # 000  0000000   000  000  000  
+    
     @isDir:  (p, cb) -> Slash.dirExists p, cb
     @isFile: (p, cb) -> Slash.fileExists p, cb
     
@@ -429,6 +449,12 @@ class Slash
             catch
                 return false
 
+    # 000   000   0000000  00000000  00000000   0000000     0000000   000000000   0000000   
+    # 000   000  000       000       000   000  000   000  000   000     000     000   000  
+    # 000   000  0000000   0000000   0000000    000   000  000000000     000     000000000  
+    # 000   000       000  000       000   000  000   000  000   000     000     000   000  
+    #  0000000   0000000   00000000  000   000  0000000    000   000     000     000   000  
+    
     @userData: ->
        
         try
@@ -462,6 +488,12 @@ class Slash
         license:1
         '.gitignore':1
         '.npmignore':1
+    
+    # 000000000  00000000  000   000  000000000  
+    #    000     000        000 000      000     
+    #    000     0000000     00000       000     
+    #    000     000        000 000      000     
+    #    000     00000000  000   000     000     
     
     @isText: (p) ->
     

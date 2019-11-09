@@ -272,6 +272,11 @@ Returns true if p is a textfile.
 Returns content of p as an utf8 string. 
 Returns an empty string, if p doesn't exist or isn't readable.
 
+## unused(p, cb)
+
+Returns p if p doesn't exist. 
+Otherwise, returns a path with a number attached such that the path doesn't exist.
+
 ## sanitize(p)
 
 Removes leading and trailing newlines from path p.

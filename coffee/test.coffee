@@ -584,8 +584,40 @@ describe 'kslash' ->
     # 000   000  000 0 000  000   000  0000000   0000000   000   000    
     # 000   000  000  0000  000   000       000  000       000   000    
     #  0000000   000   000   0000000   0000000   00000000  0000000      
-    
-    it 'unused sync' ->
+
+    it 'unused' (done) ->
         
+        slash.unused "#{__dirname}/../package.noon" (file) ->
+            file.should.eql slash.resolve "#{__dirname}/../package01.noon"
+            done()
+
+    it 'unused new' (done) ->
+        
+        slash.unused "#{__dirname}/../some.thing.ugly" (file) ->
+            file.should.eql slash.resolve "#{__dirname}/../some.thing.ugly"
+            done()
+
+    it 'unused numbered' (done) ->
+        
+        process.chdir __dirname
+        slash.unused "test99.txt" (file) -> 
+            file.should.eql slash.resolve "#{__dirname}/test01.txt"
+            done()
+            
+    it 'unused sync' ->            
+            
         slash.unused("#{__dirname}/../package.noon").should.eql slash.resolve "#{__dirname}/../package01.noon"
-    
+        
+    it 'unused sync new' ->
+        
+        slash.unused("#{__dirname}/../some.thing").should.eql slash.resolve "#{__dirname}/../some.thing"
+        slash.unused("#{__dirname}/../some").should.eql slash.resolve "#{__dirname}/../some"
+
+    it 'unused sync dir' ->
+                
+        slash.unused(__dirname).should.eql slash.resolve __dirname + '01'
+        
+    it 'unused sync numbered' ->
+        process.chdir __dirname
+        slash.unused("test99.txt").should.eql slash.resolve "#{__dirname}/test01.txt"
+        
