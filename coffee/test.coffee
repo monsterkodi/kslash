@@ -621,3 +621,9 @@ describe 'kslash' ->
         process.chdir __dirname
         slash.unused("test99.txt").should.eql slash.resolve "#{__dirname}/test01.txt"
         
+        
+    it 'tmpfile' ->
+        
+        slash.tmpfile('txt').should.match /\.txt$/
+        slash.tmpfile().should.match /[a-f\d]+$/
+        

@@ -7,7 +7,7 @@
 ###
 
 os   = require 'os'
-fs   = require 'fs-extra' 
+fs   = require 'fs-extra'
 path = require 'path'
 
 class Slash
@@ -556,7 +556,9 @@ class Slash
             catch err
                 Slash.error "Slash.writeText -- " + String(err)
         
-    @tmpfile: -> require('tmp-filepath')()
+    @tmpfile: (ext) -> 
+        
+        Slash.join os.tmpdir(), require('uuid/v1')() + (ext and ".#{ext}" or '')
                 
     # 00000000   00000000   0000000         000   000  000  000   000        00000000  00000000   00000000   
     # 000   000  000       000              000 0 000  000  0000  000        000       000   000  000   000  

@@ -221,6 +221,10 @@ p = '/dir/a # b'
 slash.fileUrl(p)                ▸ file:///dir/a%20%23%20b
 ```
 
+## tmpfile(ext)
+
+Returns a joined path of os.tmpdir and an [uuid](https://www.npmjs.com/package/uuid)
+
 ## pkg(p)
 
 Searches backwards in `pathlist` of p for a package.json and returns the containing folder, if one is found.

@@ -1,5 +1,5 @@
 name            kslash
-version         1.26.0
+version         1.29.0
 description     path tool
 keywords
                 slash
@@ -24,7 +24,7 @@ dependencies
                 fs-extra        ^8.1.0
                 isbinaryfile    ^4.0.2
                 textextensions  ^2.5.0
-                tmp-filepath    ^2.0.0
+                uuid            ^3.3.3
                 walkdir         ^0.4.1
 devDependencies
                 chai      ^4.2.0
