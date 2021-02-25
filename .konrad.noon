@@ -1,2 +1,3 @@
 ignore 
     coffee/test.coffee
+    .konrad.noon
