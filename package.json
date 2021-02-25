@@ -1,6 +1,6 @@
 {
   "name": "kslash",
-  "version": "1.29.0",
+  "version": "1.30.0",
   "description": "path tool",
   "keywords": [
     "slash",
@@ -13,8 +13,8 @@
     "js/dirlist.js"
   ],
   "scripts": {
-    "test": "./node_modules/.bin/mocha -c --require koffee/js/register ./coffee/test.coffee",
-    "watch": "./node_modules/.bin/onchange coffee/*.coffee -- npm run test"
+    "test": "mocha -c --require koffee/js/register ./coffee/test.coffee",
+    "watch": "onchange coffee/*.coffee -- npm run test"
   },
   "repository": {
     "type": "git",

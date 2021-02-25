@@ -461,9 +461,9 @@ describe 'kslash' ->
     
     it 'isText' ->
         
-        (slash.isText __dirname + '../package.noon').should.eql true
+        (slash.isText __dirname + '/../package.json').should.eql true
 
-        (slash.isText __dirname + '../img/kslash.png').should.eql false
+        (slash.isText __dirname + '/../img/kslash.png').should.eql false
 
         # (slash.isText '~/s/ko/bin/ko').should.eql true
                 
