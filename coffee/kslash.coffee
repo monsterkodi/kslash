@@ -449,32 +449,6 @@ class Slash
             catch
                 return false
 
-    # 000   000   0000000  00000000  00000000   0000000     0000000   000000000   0000000   
-    # 000   000  000       000       000   000  000   000  000   000     000     000   000  
-    # 000   000  0000000   0000000   0000000    000   000  000000000     000     000000000  
-    # 000   000       000  000       000   000  000   000  000   000     000     000   000  
-    #  0000000   0000000   00000000  000   000  0000000    000   000     000     000   000  
-    
-    @userData: ->
-       
-        try
-            electron = require 'electron'
-            if process.type == 'renderer'
-                return electron.remote.app.getPath 'userData'
-            else
-                return electron.app.getPath 'userData'
-        catch err
-            try
-                if pkgDir = Slash.pkg __dirname
-                    pkg = require slash.join pkgDir, 'package.json'
-                    { sds } = require './kxk'
-                    name = sds.find.value pkg, 'name'
-                    return Slash.resolve "~/AppData/Roaming/#{name}"
-            catch err
-                error err
-                
-        return Slash.resolve "~/AppData/Roaming/"
-
     # 000000000  00000000  000   000  000000000
     #    000     000        000 000      000   
     #    000     0000000     00000       000   
