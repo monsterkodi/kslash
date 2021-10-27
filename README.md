@@ -3,9 +3,9 @@
 
 **kslash** is a collection of path utilities.
 
-It is meant to be used as a replacement for [node's](https://nodejs.org/) [`path`](https://nodejs.org/dist/latest/docs/api/path.html) module.
-It aims to minimize the problems you get when writing platform independent code dealing with paths.
-I hope it might contain some tools of interest to you, even if you target only one platform.
+I use it as a replacement for [node's](https://nodejs.org/) [`path`](https://nodejs.org/dist/latest/docs/api/path.html) module.
+It aims to deal with file paths in a platform independent way.
+Maybe it contains some tools of interest to you, even if you target only one platform.
 
 ## path(p) 
 
@@ -22,8 +22,6 @@ that's why all exported functions return 'slashed' paths -- except the next one 
 
 ## unslash(p)
 
-Normalizes the path on all platforms.
-
 On Windows it converts
 - slashes to backslashes
 - first dirname to a drive if it has only one letter
@@ -33,7 +31,7 @@ slash.unslash '/c/test'         ▸ C:\\test
 slash.unslash 'D:/c/test'       ▸ D:\\c\\test
 ```
 
-## dir(p) 
+## dir(p)
 
 ```coffeescript
 p = '/dir/file.txt'
