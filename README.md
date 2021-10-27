@@ -307,13 +307,10 @@ slash.error = (msg) -> # throw or log or something else ...
 [![npm package][npm-image]][npm-url] 
 [![Build Status][travis-image]][travis-url] 
 [![downloads][downloads-image]][downloads-url] 
-[![Dependencies Status][david-image]][david-url]
 
 [npm-image]:https://img.shields.io/npm/v/kslash.svg
 [npm-url]:http://npmjs.org/package/kslash
 [travis-image]:https://travis-ci.org/monsterkodi/kslash.svg?branch=master
 [travis-url]:https://travis-ci.org/monsterkodi/kslash
-[david-image]:https://david-dm.org/monsterkodi/kslash/status.svg
-[david-url]:https://david-dm.org/monsterkodi/kslash
 [downloads-image]:https://img.shields.io/npm/dm/kslash.svg
 [downloads-url]:https://www.npmtrends.com/kslash
