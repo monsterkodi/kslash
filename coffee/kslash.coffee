@@ -518,7 +518,7 @@ class Slash
                             cb Slash.error "Slash.writeText - " + String(err)
                         else
                             fs.move tmpfile, p, overwrite:true, (err) ->
-                                if err then cb Slash.error "Slash.writeText -- " + String(err)
+                                if err then cb Slash.error "Slash.writeText -- move #{tmpfile} -> #{p}" + String(err)
                                 else cb p
             catch err
                 cb Slash.error "Slash.writeText --- " + String(err)
