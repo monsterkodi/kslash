@@ -327,7 +327,13 @@ describe 'kslash' ->
     
     it 'joinFilePos' ->
 
-        (slash.joinFilePos '/some/path' [0 0]).should.eql '/some/path:1'
+        (slash.joinFilePos '/some/path' [0 0]).should.eql '/some/path'
+        
+        (slash.joinFilePos '/some/path' [1 0]).should.eql '/some/path:1:1'
+        
+        (slash.joinFilePos '/some/path' [0 1]).should.eql '/some/path:2'
+        
+        (slash.joinFilePos '/some/path' [1 1]).should.eql '/some/path:2:1'
 
         (slash.joinFilePos '/some/path' [0 4]).should.eql '/some/path:5'
         

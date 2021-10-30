@@ -119,7 +119,7 @@ class Slash
     @joinFilePos: (file, pos) -> # ['file.txt', [3, 0]] --> file.txt:1:3
         
         file = Slash.removeLinePos file
-        if not pos? or not pos[0]?
+        if not pos? or not pos[0]? or pos[0] == pos[1] == 0
             file
         else if pos[0]
             file + ":#{pos[1]+1}:#{pos[0]}"
