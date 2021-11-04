@@ -80,7 +80,10 @@ describe 'kslash' ->
         
         (slash.dir '/some/dir/').should.eql '/some'
         (slash.dir '/some/dir').should.eql '/some'
-        
+
+        (slash.dir 'some/dir/').should.eql 'some'
+        (slash.dir 'some/dir').should.eql 'some'
+                
         (slash.dir '/some/').should.eql '/'
         (slash.dir '/some').should.eql '/'
         
