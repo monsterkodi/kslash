@@ -295,14 +295,20 @@ class Slash
                 p = Slash.dir p
         null
 
-    @git: (p) ->
+    @git: (p, cb) ->
 
         if p?.length?
             
-            while p.length and Slash.removeDrive(p) not in ['.', '/', '']
-                
-                if Slash.dirExists Slash.join p, '.git' then return Slash.resolve p
-                p = Slash.dir p
+            if 'function' == typeof cb
+                Slash.dirExists Slash.join(p, '.git'), (stat) -> 
+                    if valid stat then cb Slash.resolve p
+                    else if Slash.removeDrive(p) not in ['.' '/' '']
+                        Slash.git Slash.dir(p), cb
+            else
+                while p.length and Slash.removeDrive(p) not in ['.' '/' '']
+                    
+                    if Slash.dirExists Slash.join p, '.git' then return Slash.resolve p
+                    p = Slash.dir p
         null
         
     # 00000000  000   000  000   0000000  000000000   0000000  
