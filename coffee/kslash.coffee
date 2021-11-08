@@ -301,7 +301,7 @@ class Slash
             
             if 'function' == typeof cb
                 Slash.dirExists Slash.join(p, '.git'), (stat) -> 
-                    if valid stat then cb Slash.resolve p
+                    if stat then cb Slash.resolve p
                     else if Slash.removeDrive(p) not in ['.' '/' '']
                         Slash.git Slash.dir(p), cb
             else
