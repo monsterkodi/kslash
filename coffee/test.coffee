@@ -210,6 +210,8 @@ describe 'kslash' ->
         (slash.resolve 'C:').should.eql 'C:/'
         (slash.resolve 'C:\\').should.eql 'C:/'
         (slash.resolve 'C:/some/path/on.c').should.eql 'C:/some/path/on.c'
+        
+        (slash.resolve '~' 'a' 'b').should.eql slash.resolve slash.join '~' 'a' 'b'
 
     # 00000000   00000000  000       0000000   000000000  000  000   000  00000000  
     # 000   000  000       000      000   000     000     000  000   000  000       

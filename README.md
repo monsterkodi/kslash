@@ -7,6 +7,13 @@ I use it as a replacement for [node's](https://nodejs.org/) [`path`](https://nod
 It aims to deal with file paths in a platform independent way.
 Maybe it contains some tools of interest to you, even if you target only one platform.
 
+## resolve(p ...) 
+
+Applies `unenv` and `untilde` before converting path into an absolute one.
+Joins all arguments before doing so.
+
+This is the function I use the most and it usually resolves all my problems ☺️
+
 ## path(p) 
 
 Normalizes the path and converts backslashes to slashes.
@@ -107,6 +114,10 @@ p = '~/file.txt'
 slash.untilde(p)                ▸ C:/Users/kodi/file.txt
 ```
 
+## unenv(p) 
+
+Replaces `$...` with matching environment variables
+
 ## split(p)
 
 ```coffeescript
@@ -176,13 +187,6 @@ slash.joinFileLine(p, 1, 2)     ▸ /dir/file.txt:1:2
 p = '/dir/file.txt'
 slash.pathlist(p)               ▸ ['/', '/dir', '/dir/file.txt']
 ```
-## resolve(p) 
-
-Applies `unenv` and `untilde` before converting path into an absolute one.
-
-## unenv(p) 
-
-Replaces `$...` with matching environment variables
 
 ```coffeescript
 p = '$HOME/dir'

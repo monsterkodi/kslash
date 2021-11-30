@@ -45,6 +45,27 @@ class Slash
                 p =  p[0].toUpperCase() + p[1..]
         p
         
+    # 00000000   00000000   0000000   0000000   000      000   000  00000000  
+    # 000   000  000       000       000   000  000      000   000  000       
+    # 0000000    0000000   0000000   000   000  000       000 000   0000000   
+    # 000   000  000            000  000   000  000         000     000       
+    # 000   000  00000000  0000000    0000000   0000000      0      00000000  
+    
+    @resolve: (p) ->
+                
+        p = process.cwd() if not p?.length
+        
+        if arguments.length > 1
+            p = Slash.join.apply 0, arguments
+        
+        p = Slash.unenv Slash.untilde p
+        
+        if Slash.isRelative p
+            p = Slash.path path.resolve p
+        else
+            p = Slash.path p
+        p
+        
     #  0000000  00000000   000      000  000000000  
     # 000       000   000  000      000     000     
     # 0000000   00000000   000      000     000     
@@ -238,19 +259,7 @@ class Slash
             i = p.indexOf '$', i+1
             
         Slash.path p
-    
-    @resolve: (p) ->
         
-        p = process.cwd() if not p?.length
-        
-        p = Slash.unenv Slash.untilde p
-        
-        if Slash.isRelative p
-            p = Slash.path path.resolve p
-        else
-            p = Slash.path p
-        p
-    
     @relative: (rel, to) ->
         
         to = process.cwd() if not to?.length
