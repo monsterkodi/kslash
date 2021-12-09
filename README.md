@@ -10,6 +10,7 @@ Maybe it contains some tools of interest to you, even if you target only one pla
 ## resolve(p ...) 
 
 Applies `unenv` and `untilde` before converting path into an absolute one.
+
 Joins all arguments before doing so.
 
 This is the function I use the most and it usually resolves all my problems ☺️
