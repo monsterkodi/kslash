@@ -638,3 +638,9 @@ describe 'kslash' ->
         slash.tmpfile('txt').should.match /\.txt$/
         slash.tmpfile().should.match /[a-f\d]+$/
         
+    it 'remove' ->
+        t = slash.touch slash.tmpfile()
+        slash.isFile(t).should.not.eql null
+        expect(slash.remove(t)).to.not.exist
+        expect(slash.isFile(t)).to.not.exist
+        
