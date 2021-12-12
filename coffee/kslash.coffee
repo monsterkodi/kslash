@@ -569,6 +569,9 @@ class Slash
 
     @win: -> path.sep == '\\'
     
+    @fs: fs
+    @watch: fs.watch
+    
     @error: (msg) -> 
         if @logErrors then error msg 
         ''
