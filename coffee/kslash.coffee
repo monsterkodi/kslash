@@ -528,19 +528,26 @@ class Slash
                     
                     mode = stat?.mode ? 0o666
     
-                    fs.writeFile tmpfile, text, mode:mode, (err) ->
+                    # fs.writeFile tmpfile, text, mode:mode, (err) ->
+                        # if err 
+                            # cb Slash.error "Slash.writeText - " + String(err)
+                        # else
+                            # fs.move tmpfile, p, overwrite:true, (err) ->
+                                # if err then cb Slash.error "Slash.writeText -- move #{tmpfile} -> #{p}" + String(err)
+                                # else cb p
+                                
+                    fs.writeFile p, text, mode:mode, (err) ->
                         if err 
                             cb Slash.error "Slash.writeText - " + String(err)
                         else
-                            fs.move tmpfile, p, overwrite:true, (err) ->
-                                if err then cb Slash.error "Slash.writeText -- move #{tmpfile} -> #{p}" + String(err)
-                                else cb p
+                            cb p
             catch err
                 cb Slash.error "Slash.writeText --- " + String(err)
         else
             try
-                fs.writeFileSync tmpfile, text
-                fs.moveSync tmpfile, p, overwrite:true
+                # fs.writeFileSync tmpfile, text
+                # fs.moveSync tmpfile, p, overwrite:true
+                fs.writeFileSync p, text
                 p
             catch err
                 Slash.error "Slash.writeText -- " + String(err)
