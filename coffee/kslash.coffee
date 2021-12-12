@@ -532,13 +532,22 @@ class Slash
                         if err 
                             cb Slash.error "Slash.writeText - " + String(err)
                         else
-                            fs.cp tmpfile, p, (err) ->
-                                if err then cb Slash.error "Slash.writeText -- cp #{tmpfile} -> #{p}" + String(err)
-                                else cb p
-                                fs.unlink tmpfile, (err) ->
+                            if slash.win()
+                                fs.cp tmpfile, p, (err) ->
+                                    if err then cb Slash.error "Slash.writeText -- cp #{tmpfile} -> #{p}" + String(err)
+                                    else cb p
+                            else
+                                childp = require 'child_process'
+                                childp.exec "cp #{tmpfile} #{p}", (err) ->
+                                    if err then cb Slash.error "Slash.writeText -- cp #{tmpfile} -> #{p}" + String(err)
+                                    else cb p
+                                
+                            fs.unlink tmpfile, (err) ->
+                                
                             # fs.rename tmpfile, p, (err) ->
                                 # if err then cb Slash.error "Slash.writeText -- move #{tmpfile} -> #{p}" + String(err)
                                 # else cb p
+                                
                             # fs.move tmpfile, p, overwrite:true, (err) ->
                                 # if err then cb Slash.error "Slash.writeText -- move #{tmpfile} -> #{p}" + String(err)
                                 # else cb p
@@ -548,7 +557,8 @@ class Slash
             try
                 fs.writeFileSync tmpfile, text
                 # fs.moveSync tmpfile, p, overwrite:true
-                fs.renameSync tmpfile, p
+                # fs.renameSync tmpfile, p
+                fs.cpSync tmpfile, p
                 p
             catch err
                 Slash.error "Slash.writeText -- " + String(err)
