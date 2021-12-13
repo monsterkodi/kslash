@@ -269,10 +269,10 @@ class Slash
             return '.'
 
         [rl, rd] = Slash.splitDrive rel
-        [to, td] = Slash.splitDrive Slash.resolve to
+        [tl, td] = Slash.splitDrive Slash.resolve to
         if rd and td and rd != td
             return rel
-        Slash.path path.relative to, rl
+        Slash.path path.relative tl, rl
         
     @fileUrl: (p) -> "file:///#{Slash.encode p}"
 
@@ -334,7 +334,7 @@ class Slash
                     cb() 
                     return
                 p = Slash.resolve Slash.removeLinePos p
-                fs.access p, fs.R_OK | fs.F_OK, (err) ->
+                fs.access p, (fs.R_OK | fs.F_OK), (err) ->
                     if err?
                         cb() 
                     else
@@ -422,7 +422,7 @@ class Slash
                 i = 1
                 test = ''
                 check = ->
-                    test = "#{name}#{"#{i}".padStart(2 '0')}#{ext}"
+                    test = """#{name}#{"#{i}".padStart(2 '0')}#{ext}"""
                     if dir then test = Slash.join dir, test
                     Slash.exists test, (stat) ->
                         if stat
@@ -434,7 +434,7 @@ class Slash
         else
             if not Slash.exists(p) then return Slash.resolve p
             for i in [1..1000]
-                test = "#{name}#{"#{i}".padStart(2 '0')}#{ext}"
+                test = """#{name}#{"#{i}".padStart(2 '0')}#{ext}"""
                 if dir then test = Slash.join dir, test
                 if not Slash.exists test
                     return Slash.resolve test
@@ -452,16 +452,16 @@ class Slash
         
         if 'function' == typeof cb
             try
-                fs.access Slash.resolve(p), fs.R_OK | fs.W_OK, (err) ->
+                fs.access Slash.resolve(p), (fs.R_OK | fs.W_OK), (err) ->
                     cb not err?
             catch err
                 Slash.error "Slash.isWritable -- " + String(err) 
                 cb false
         else
             try
-                fs.accessSync Slash.resolve(p), fs.R_OK | fs.W_OK
+                fs.accessSync Slash.resolve(p), (fs.R_OK | fs.W_OK)
                 return true
-            catch
+            catch err
                 return false
 
     # 000000000  00000000  000   000  000000000
@@ -511,12 +511,14 @@ class Slash
                 fs.readFile p, 'utf8', (err, text) -> 
                     cb not err and text or ''
             catch err
-                cb Slash.error "Slash.readText -- " + String(err)
+                Slash.error "Slash.readText -- " + String(err)
+                cb ''
         else
             try
-                fs.readFileSync p, 'utf8'
+                return fs.readFileSync p, 'utf8'
             catch err
                 Slash.error "Slash.readText -- " + String(err)
+            ''
 
     @writeText: (p, text, cb) ->
         
@@ -530,21 +532,36 @@ class Slash
     
                     fs.writeFile tmpfile, text, mode:mode, (err) ->
                         if err 
-                            cb Slash.error "Slash.writeText - " + String(err)
+                            Slash.error "Slash.writeText - " + String(err)
+                            cb ''
                         else
                             fs.move tmpfile, p, overwrite:true, (err) ->
-                                if err then cb Slash.error "Slash.writeText -- move #{tmpfile} -> #{p}" + String(err)
-                                else cb p
+                                Slash.error "Slash.writeText -- move #{tmpfile} -> #{p}" + String(err)
+                                if err then cb '' else cb p
             catch err
                 cb Slash.error "Slash.writeText --- " + String(err)
         else
             try
                 fs.writeFileSync tmpfile, text
                 fs.moveSync tmpfile, p, overwrite:true
-                p
+                return p
             catch err
                 Slash.error "Slash.writeText -- " + String(err)
+            ''
         
+    # 000   000   0000000   000000000   0000000  000   000  
+    # 000 0 000  000   000     000     000       000   000  
+    # 000000000  000000000     000     000       000000000  
+    # 000   000  000   000     000     000       000   000  
+    # 00     00  000   000     000      0000000  000   000  
+    
+    @watch: (p, cb) -> 
+        
+        Watcher = require './watcher'
+        @watcher ?= new Watcher
+        @watcher.watch p, cb
+        null
+    
     @tmpfile: (ext) -> 
         
         Slash.join os.tmpdir(), require('uuid').v1() + (ext and ".#{ext}" or '')
@@ -565,12 +582,11 @@ class Slash
     # 000   000  000       000   000        000   000  000  000  0000        000       000   000  000   000  
     # 000   000  00000000   0000000         00     00  000  000   000        00000000  000   000  000   000  
     
-    @reg = new RegExp "\\\\", 'g'
+    @reg: new RegExp "\\\\", 'g'
 
     @win: -> path.sep == '\\'
     
     @fs: fs
-    @watch: fs.watch
     
     @error: (msg) -> 
         if @logErrors then error msg 
