@@ -6,9 +6,123 @@
 00     00  000   000     000      0000000  000   000  00000000  000   000
 ###
 
+slash = require './kslash'
+
 class Watcher
 
-    @: ->
+    @dirWatchers:  {}
+    
+    @: (@dir) ->
 
+        @files = {}
+        @cache = {}
+        @cbcks = []
+        @timer = null
+        @watch = slash.fs.watch @dir, @onChange
+        
+    #  0000000   0000000    0000000     0000000  0000000    
+    # 000   000  000   000  000   000  000       000   000  
+    # 000000000  000   000  000   000  000       0000000    
+    # 000   000  000   000  000   000  000       000   000  
+    # 000   000  0000000    0000000     0000000  0000000    
+    
+    addCb: (cb, file) ->
+        
+        if file 
+            @files[file] ?= [] 
+            if cb not in @files[file]
+                @files[file].push cb
+        else
+            if cb not in @cbcks
+                @cbcks.push cb
 
+    # 0000000    00000000  000       0000000  0000000    
+    # 000   000  000       000      000       000   000  
+    # 000   000  0000000   000      000       0000000    
+    # 000   000  000       000      000       000   000  
+    # 0000000    00000000  0000000   0000000  0000000    
+    
+    delCb: (cb, file) ->
+        
+        if file
+            if cb in @files[file]
+                @files[file].splice @files[file].indexOf(cb), 1
+                if @files[file].length == 0
+                    delete @files[file]
+        else
+            if cb in @cbcks
+                @cbcks.splice @cbcks.indexOf(cb), 1
+
+        if @cbcks.length == 0 == Object.keys(@files).length
+            @watch.close()
+            delete Watcher.dirWatchers[@dir]
+                
+    #  0000000  000   000   0000000   000   000   0000000   00000000  
+    # 000       000   000  000   000  0000  000  000        000       
+    # 000       000000000  000000000  000 0 000  000  0000  0000000   
+    # 000       000   000  000   000  000  0000  000   000  000       
+    #  0000000  000   000  000   000  000   000   0000000   00000000  
+    
+    onChange: (change, p) =>
+        
+        clearTimeout @timer
+        f = slash.join @dir, p
+        @cache[f] = 1
+        @timer = setTimeout @notify, 100
+        
+    notify: =>
+        
+        files = Object.keys @cache
+        @cache = {}
+        
+        for f in files
+
+            for cb in @files[f]
+                cb f
+                
+            for cb in @cbcks
+                cb f
+        
+    # 000   000   0000000   000000000   0000000  000   000  
+    # 000 0 000  000   000     000     000       000   000  
+    # 000000000  000000000     000     000       000000000  
+    # 000   000  000   000     000     000       000   000  
+    # 00     00  000   000     000      0000000  000   000  
+    
+    @watch: (path, cb) ->
+        
+        p = slash.resolve path
+        slash.isDir p, (d) =>
+            if d
+                @watchDir cb, p
+            else
+                @watchDir cb, slash.dir(p), p
+
+    @watchDir: (cb, dir, file) ->
+        
+        if not @dirWatchers[dir] then @dirWatchers[dir] = new Watcher dir
+
+        @dirWatchers[dir].addCb cb, file
+
+    # 000   000  000   000  000   000   0000000   000000000   0000000  000   000  
+    # 000   000  0000  000  000 0 000  000   000     000     000       000   000  
+    # 000   000  000 0 000  000000000  000000000     000     000       000000000  
+    # 000   000  000  0000  000   000  000   000     000     000       000   000  
+    #  0000000   000   000  00     00  000   000     000      0000000  000   000  
+    
+    @unwatch: (path, cb) -> 
+
+        p = slash.resolve path
+        slash.isDir p, (d) =>
+            if d
+                @unwatchDir cb, p
+            else
+                @unwatchDir cb, slash.dir(p), p
+        
+    @unwatchDir: (cb, dir, file) ->
+        
+        return if not @dirWatchers[dir]
+
+        @dirWatchers[dir].delCb cb, file
+                            
 module.exports = Watcher

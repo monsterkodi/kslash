@@ -1,6 +1,6 @@
 {
   "name": "kslash",
-  "version": "2.18.0",
+  "version": "2.19.0",
   "description": "path tool",
   "keywords": [
     "slash",
@@ -18,14 +18,7 @@
     "test": "kode -t kode/test.kode",
     "watch": "kode -wt kode/test.kode"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/monsterkodi/kslash.git"
-  },
-  "bugs": {
-    "url": "https://github.com/monsterkodi/kslash/issues"
-  },
-  "homepage": "https://www.npmjs.com/package/kslash",
+  "repository": "github:monsterkodi/kslash",
   "author": "monsterkodi",
   "license": "Unlicense",
   "dependencies": {

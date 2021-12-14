@@ -168,7 +168,7 @@ p = '/dir/file.txt:12:3'
 slash.removeColumn(p)           ▸ /dir/file.txt:12
 ```
 
-## joinFilePos(p, pos) 
+## joinFilePos(p, pos)
 
 ```coffeescript
 p = '/dir/file.txt:12'
@@ -283,6 +283,14 @@ Returns an empty string, if p doesn't exist or isn't readable.
 
 Returns p if p doesn't exist. 
 Otherwise, returns a path with a number attached such that the path doesn't exist.
+
+## watch(p, cb)
+
+calls cb each time p changes. if p is a directory, cb will be called for each file change in that directory.
+
+## unwatch(p, cb)
+
+removes watches created with watch.
 
 ## sanitize(p)
 

@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.112.0
+// monsterkodi/kode 0.113.0
 
 var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return (l != null ? typeof l.length === 'number' ? l : [] : [])}}
 
@@ -933,12 +933,18 @@ class Slash
 
     static watch (p, cb)
     {
-        var Watcher, _561_17_
+        var Watcher
 
         Watcher = require('./watcher')
-        this.watcher = ((_561_17_=this.watcher) != null ? _561_17_ : new Watcher)
-        this.watcher.watch(p,cb)
-        return null
+        return Watcher.watch(p,cb)
+    }
+
+    static unwatch (p, cb)
+    {
+        var Watcher
+
+        Watcher = require('./watcher')
+        return Watcher.unwatch(p,cb)
     }
 
     static tmpfile (ext)
