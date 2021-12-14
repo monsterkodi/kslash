@@ -1,10 +1,12 @@
 name            kslash
-version         2.19.0
-description     path tool
+version         2.21.0
+description     path tools
 keywords
                 slash
                 path
+                file
                 tool
+                utilities
 main            js/kslash.js
 files
                 js/kslash.js
