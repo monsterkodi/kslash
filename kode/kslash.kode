@@ -298,9 +298,9 @@ class Slash
             
             while p.length and Slash.removeDrive(p) not in ['.', '/', '']
                 
-                if Slash.dirExists  Slash.join p, '.git'         then return Slash.resolve p
-                if Slash.fileExists Slash.join p, 'package.noon' then return Slash.resolve p
-                if Slash.fileExists Slash.join p, 'package.json' then return Slash.resolve p
+                if  Slash.dirExists  Slash.join p, '.git'         or
+                    Slash.fileExists Slash.join p, 'package.noon' or
+                    Slash.fileExists Slash.join p, 'package.json' ➜ return Slash.resolve p
                 p = Slash.dir p
         null
 
@@ -308,7 +308,7 @@ class Slash
 
         if p?.length?
             
-            if 'function' == typeof cb
+            if cb is 'function'
                 Slash.dirExists Slash.join(p, '.git'), (stat) -> 
                     if stat then cb Slash.resolve p
                     else if Slash.removeDrive(p) not in ['.' '/' '']
@@ -328,7 +328,7 @@ class Slash
     
     @exists: (p, cb) ->
         
-        if 'function' == typeof cb
+        if cb is 'function'
             try
                 if not p?
                     cb() 
@@ -360,7 +360,7 @@ class Slash
                 
     @fileExists: (p, cb) ->
         
-        if 'function' == typeof cb
+        if cb is 'function'
             Slash.exists p, (stat) ->
                 if stat?.isFile() then cb stat
                 else cb()
@@ -370,7 +370,7 @@ class Slash
                 
     @dirExists: (p, cb) ->
 
-        if 'function' == typeof cb
+        if cb is 'function'
             Slash.exists p, (stat) ->
                 if stat?.isDirectory() then cb stat
                 else cb()
@@ -413,7 +413,7 @@ class Slash
         if /\d\d$/.test name
             name = name.slice 0, name.length-2
         
-        if 'function' == typeof cb
+        if cb is 'function'
             
             Slash.exists p, (stat) ->
                 if not stat 
@@ -433,7 +433,7 @@ class Slash
                 check()
         else
             if not Slash.exists(p) then return Slash.resolve p
-            for i in [1..1000]
+            for i in 1..1000
                 test = """#{name}#{"#{i}".padStart(2 '0')}#{ext}"""
                 if dir then test = Slash.join dir, test
                 if not Slash.exists test
@@ -450,7 +450,7 @@ class Slash
     
     @isWritable: (p, cb) ->
         
-        if 'function' == typeof cb
+        if cb is 'function'
             try
                 fs.access Slash.resolve(p), (fs.R_OK | fs.W_OK), (err) ->
                     cb not err?
@@ -506,7 +506,7 @@ class Slash
         
     @readText: (p, cb) ->
         
-        if 'function' == typeof cb
+        if cb is 'function'
             try
                 fs.readFile p, 'utf8', (err, text) -> 
                     cb not err and text or ''
@@ -524,7 +524,7 @@ class Slash
         
         tmpfile = Slash.tmpfile()
         
-        if 'function' == typeof cb
+        if cb is 'function'
             try
                 @fileExists p, (stat) ->  
                     

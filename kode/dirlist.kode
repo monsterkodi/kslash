@@ -23,11 +23,11 @@ dirList = (dirPath, opt, cb) ->
     
     walkdir = require 'walkdir'
     
-    if typeof(dirPath) == 'function' and not opt? 
+    if dirPath is 'function' and not opt? 
         cb = dirPath  # only a callback is provided
         dirPath = '.' # list the current dir
     else
-        if typeof(opt) == 'function' and not cb? 
+        if opt is 'function' and not cb? 
             cb = opt
         else
             cb ?= opt?.cb
@@ -84,7 +84,7 @@ dirList = (dirPath, opt, cb) ->
         
     fileSort = (a,b) -> a.name.localeCompare b.name
     
-    if typeof(cb) == 'function' # async
+    if cb is 'function' # async
             
         try
             walker = walkdir.walk dirPath, no_recurse:true

@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.113.0
+// monsterkodi/kode 0.128.0
 
 var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
@@ -11,14 +11,14 @@ dirList = function (dirPath, opt, cb)
     var walkdir, _36_21_, _37_21_, _38_21_, dirs, files, filter, onDir, onFile, fileSort, walker
 
     walkdir = require('walkdir')
-    if (typeof(dirPath) === 'function' && !(opt != null))
+    if (typeof(dirPath) == 'function' && !(opt != null))
     {
         cb = dirPath
         dirPath = '.'
     }
     else
     {
-        if (typeof(opt) === 'function' && !(cb != null))
+        if (typeof(opt) == 'function' && !(cb != null))
         {
             cb = opt
         }
@@ -95,7 +95,7 @@ dirList = function (dirPath, opt, cb)
     {
         return a.name.localeCompare(b.name)
     }
-    if (typeof(cb) === 'function')
+    if (typeof(cb) == 'function')
     {
         try
         {

@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.113.0
+// monsterkodi/kode 0.128.0
 
 var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return (l != null ? typeof l.length === 'number' ? l : [] : [])}}
 
@@ -140,7 +140,7 @@ class Slash
     {
         var f, d, split, line, clmn, l, c
 
-        ;[f,d] = Slash.splitDrive(p)
+        var _106_14_ = Slash.splitDrive(p) ; f = _106_14_[0]        ; d = _106_14_[1]
 
         split = String(f).split(':')
         if (split.length > 1)
@@ -171,7 +171,7 @@ class Slash
     {
         var f, l, c
 
-        ;[f,l,c] = Slash.splitFileLine(p)
+        var _118_16_ = Slash.splitFileLine(p) ; f = _118_16_[0]        ; l = _118_16_[1]        ; c = _118_16_[2]
 
         return [f,[c,l - 1]]
     }
@@ -185,7 +185,7 @@ class Slash
     {
         var f, l
 
-        ;[f,l] = Slash.splitFileLine(p)
+        var _123_14_ = Slash.splitFileLine(p) ; f = _123_14_[0]        ; l = _123_14_[1]
 
         if (l > 1)
         {
@@ -439,9 +439,9 @@ class Slash
         {
             return '.'
         }
-        ;[rl,rd] = Slash.splitDrive(rel)
+        var _271_17_ = Slash.splitDrive(rel) ; rl = _271_17_[0]        ; rd = _271_17_[1]
 
-        ;[tl,td] = Slash.splitDrive(Slash.resolve(to))
+        var _272_17_ = Slash.splitDrive(Slash.resolve(to)) ; tl = _272_17_[0]        ; td = _272_17_[1]
 
         if (rd && td && rd !== td)
         {
@@ -481,15 +481,7 @@ class Slash
         {
             while (p.length && !(_k_.in(Slash.removeDrive(p),['.','/',''])))
             {
-                if (Slash.dirExists(Slash.join(p,'.git')))
-                {
-                    return Slash.resolve(p)
-                }
-                if (Slash.fileExists(Slash.join(p,'package.noon')))
-                {
-                    return Slash.resolve(p)
-                }
-                if (Slash.fileExists(Slash.join(p,'package.json')))
+                if (Slash.dirExists(Slash.join(p,'.git' || Slash.fileExists(Slash.join(p,'package.noon' || Slash.fileExists(Slash.join(p,'package.json')))))))
                 {
                     return Slash.resolve(p)
                 }
@@ -505,7 +497,7 @@ class Slash
 
         if (((p != null ? p.length : undefined) != null))
         {
-            if ('function' === typeof(cb))
+            if (typeof(cb) == 'function')
             {
                 Slash.dirExists(Slash.join(p,'.git'),function (stat)
                 {
@@ -538,7 +530,7 @@ class Slash
     {
         var stat
 
-        if ('function' === typeof(cb))
+        if (typeof(cb) == 'function')
         {
             try
             {
@@ -605,7 +597,7 @@ class Slash
     {
         var stat
 
-        if ('function' === typeof(cb))
+        if (typeof(cb) == 'function')
         {
             return Slash.exists(p,function (stat)
             {
@@ -635,7 +627,7 @@ class Slash
     {
         var stat
 
-        if ('function' === typeof(cb))
+        if (typeof(cb) == 'function')
         {
             return Slash.exists(p,function (stat)
             {
@@ -697,7 +689,7 @@ class Slash
         {
             name = name.slice(0,name.length - 2)
         }
-        if ('function' === typeof(cb))
+        if (typeof(cb) == 'function')
         {
             return Slash.exists(p,function (stat)
             {
@@ -766,7 +758,7 @@ class Slash
 
     static isWritable (p, cb)
     {
-        if ('function' === typeof(cb))
+        if (typeof(cb) == 'function')
         {
             try
             {
@@ -842,7 +834,7 @@ class Slash
 
     static readText (p, cb)
     {
-        if ('function' === typeof(cb))
+        if (typeof(cb) == 'function')
         {
             try
             {
@@ -876,7 +868,7 @@ class Slash
         var tmpfile
 
         tmpfile = Slash.tmpfile()
-        if ('function' === typeof(cb))
+        if (typeof(cb) == 'function')
         {
             try
             {
