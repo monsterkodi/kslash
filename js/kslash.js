@@ -1,8 +1,8 @@
-// monsterkodi/kode 0.128.0
+// monsterkodi/kode 0.172.0
 
 var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return (l != null ? typeof l.length === 'number' ? l : [] : [])}}
 
-var os, fs, path
+var fs, os, path
 
 os = require('os')
 fs = require('fs-extra')
@@ -92,7 +92,7 @@ class Slash
 
     static splitDrive (p)
     {
-        var parsed, root, filePath
+        var filePath, parsed, root
 
         p = Slash.path(p)
         parsed = Slash.parse(p)
@@ -138,7 +138,7 @@ class Slash
 
     static splitFileLine (p)
     {
-        var f, d, split, line, clmn, l, c
+        var c, clmn, d, f, l, line, split
 
         var _106_14_ = Slash.splitDrive(p) ; f = _106_14_[0]        ; d = _106_14_[1]
 
@@ -169,7 +169,7 @@ class Slash
 
     static splitFilePos (p)
     {
-        var f, l, c
+        var c, f, l
 
         var _118_16_ = Slash.splitFileLine(p) ; f = _118_16_[0]        ; l = _118_16_[1]        ; c = _118_16_[2]
 
@@ -424,7 +424,7 @@ class Slash
 
     static relative (rel, to)
     {
-        var rl, rd, tl, td
+        var rd, rl, td, tl
 
         if (!(to != null ? to.length : undefined))
         {
@@ -497,7 +497,7 @@ class Slash
 
         if (((p != null ? p.length : undefined) != null))
         {
-            if (typeof(cb) == 'function')
+            if (typeof(cb) === 'function')
             {
                 Slash.dirExists(Slash.join(p,'.git'),function (stat)
                 {
@@ -530,7 +530,7 @@ class Slash
     {
         var stat
 
-        if (typeof(cb) == 'function')
+        if (typeof(cb) === 'function')
         {
             try
             {
@@ -597,7 +597,7 @@ class Slash
     {
         var stat
 
-        if (typeof(cb) == 'function')
+        if (typeof(cb) === 'function')
         {
             return Slash.exists(p,function (stat)
             {
@@ -627,7 +627,7 @@ class Slash
     {
         var stat
 
-        if (typeof(cb) == 'function')
+        if (typeof(cb) === 'function')
         {
             return Slash.exists(p,function (stat)
             {
@@ -679,7 +679,7 @@ class Slash
 
     static unused (p, cb)
     {
-        var name, dir, ext, i, test
+        var dir, ext, i, name, test
 
         name = Slash.base(p)
         dir = Slash.dir(p)
@@ -689,11 +689,11 @@ class Slash
         {
             name = name.slice(0,name.length - 2)
         }
-        if (typeof(cb) == 'function')
+        if (typeof(cb) === 'function')
         {
             return Slash.exists(p,function (stat)
             {
-                var i, test, check
+                var check, i, test
 
                 if (!stat)
                 {
@@ -758,13 +758,14 @@ class Slash
 
     static isWritable (p, cb)
     {
-        if (typeof(cb) == 'function')
+        if (typeof(cb) === 'function')
         {
             try
             {
                 return fs.access(Slash.resolve(p),(fs.R_OK | fs.W_OK),function (err)
                 {
-                    return cb(!(err != null))
+                    cb
+                    return !(err != null)
                 })
             }
             catch (err)
@@ -834,13 +835,14 @@ class Slash
 
     static readText (p, cb)
     {
-        if (typeof(cb) == 'function')
+        if (typeof(cb) === 'function')
         {
             try
             {
                 return fs.readFile(p,'utf8',function (err, text)
                 {
-                    return cb(!err && text || '')
+                    cb
+                    return !err && text || ''
                 })
             }
             catch (err)
@@ -868,7 +870,7 @@ class Slash
         var tmpfile
 
         tmpfile = Slash.tmpfile()
-        if (typeof(cb) == 'function')
+        if (typeof(cb) === 'function')
         {
             try
             {

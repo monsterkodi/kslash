@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.128.0
+// monsterkodi/kode 0.172.0
 
 var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return (l != null ? typeof l.length === 'number' ? l : [] : [])}}
 
@@ -81,7 +81,7 @@ class Watcher
 
     notify ()
     {
-        var files, f, cb
+        var cb, f, files
 
         files = Object.keys(this.cache)
         this.cache = {}
