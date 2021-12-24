@@ -1,6 +1,6 @@
-// monsterkodi/kode 0.172.0
+// monsterkodi/kode 0.217.0
 
-var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return (l != null ? typeof l.length === 'number' ? l : [] : [])}}
+var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, dbg: function (f,l,c,m,...a) { console.log(f + ':' + l + ':' + c + (m ? ' ' + m + '\n' : '\n') + a.map(function (a) { return _k_.noon(a) }).join(' '))}, list: function (l) {return (l != null ? typeof l.length === 'number' ? l : [] : [])}, noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }}
 
 var fs, os, path
 
@@ -107,7 +107,7 @@ class Slash
             {
                 filePath = '/'
             }
-            return [filePath(root.slice(0,root.length - 2))]
+            return [filePath,root.slice(0,root.length - 2)]
         }
         else if (parsed.dir.length > 1)
         {
@@ -140,7 +140,7 @@ class Slash
     {
         var c, clmn, d, f, l, line, split
 
-        var _106_14_ = Slash.splitDrive(p) ; f = _106_14_[0]        ; d = _106_14_[1]
+        var _106_14_ = Slash.splitDrive(p); f = _106_14_[0]; d = _106_14_[1]
 
         split = String(f).split(':')
         if (split.length > 1)
@@ -171,7 +171,7 @@ class Slash
     {
         var c, f, l
 
-        var _118_16_ = Slash.splitFileLine(p) ; f = _118_16_[0]        ; l = _118_16_[1]        ; c = _118_16_[2]
+        var _118_16_ = Slash.splitFileLine(p); f = _118_16_[0]; l = _118_16_[1]; c = _118_16_[2]
 
         return [f,[c,l - 1]]
     }
@@ -185,7 +185,7 @@ class Slash
     {
         var f, l
 
-        var _123_14_ = Slash.splitFileLine(p) ; f = _123_14_[0]        ; l = _123_14_[1]
+        var _123_14_ = Slash.splitFileLine(p); f = _123_14_[0]; l = _123_14_[1]
 
         if (l > 1)
         {
@@ -439,9 +439,9 @@ class Slash
         {
             return '.'
         }
-        var _271_17_ = Slash.splitDrive(rel) ; rl = _271_17_[0]        ; rd = _271_17_[1]
+        var _271_17_ = Slash.splitDrive(rel); rl = _271_17_[0]; rd = _271_17_[1]
 
-        var _272_17_ = Slash.splitDrive(Slash.resolve(to)) ; tl = _272_17_[0]        ; td = _272_17_[1]
+        var _272_17_ = Slash.splitDrive(Slash.resolve(to)); tl = _272_17_[0]; td = _272_17_[1]
 
         if (rd && td && rd !== td)
         {
@@ -762,10 +762,11 @@ class Slash
         {
             try
             {
-                return fs.access(Slash.resolve(p),(fs.R_OK | fs.W_OK),function (err)
+                return fs.access(Slash.resolve(p),(fs.constants.R_OK | fs.constants.W_OK),function (err)
                 {
+                    _k_.dbg("kode/kslash.kode", 456, 20, null, "isWritable",err)
                     cb
-                    return !(err != null)
+                    return !err
                 })
             }
             catch (err)
@@ -778,7 +779,7 @@ class Slash
         {
             try
             {
-                fs.accessSync(Slash.resolve(p),(fs.R_OK | fs.W_OK))
+                fs.accessSync(Slash.resolve(p),(fs.constants.R_OK | fs.constants.W_OK))
                 return true
             }
             catch (err)
@@ -802,9 +803,9 @@ class Slash
             {
                 Slash.textext = {}
                 var list = _k_.list(require('textextensions'))
-                for (var _492_24_ = 0; _492_24_ < list.length; _492_24_++)
+                for (var _493_24_ = 0; _493_24_ < list.length; _493_24_++)
                 {
-                    ext = list[_492_24_]
+                    ext = list[_493_24_]
                     Slash.textext[ext] = true
                 }
                 Slash.textext['crypt'] = true
@@ -876,9 +877,9 @@ class Slash
             {
                 return this.fileExists(p,function (stat)
                 {
-                    var mode, _531_38_
+                    var mode, _532_38_
 
-                    mode = ((_531_38_=(stat != null ? stat.mode : undefined)) != null ? _531_38_ : 0o666)
+                    mode = ((_532_38_=(stat != null ? stat.mode : undefined)) != null ? _532_38_ : 0o666)
                     return fs.writeFile(tmpfile,text,{mode:mode},function (err)
                     {
                         if (err)
