@@ -888,9 +888,9 @@ class Slash
                         {
                             return fs.move(tmpfile,p,{overwrite:true},function (err)
                             {
-                                Slash.error(`Slash.writeText -- move ${tmpfile} -> ${p}` + String(err))
                                 if (err)
                                 {
+                                    Slash.error(`Slash.writeText -- move ${tmpfile} -> ${p} ERROR:` + String(err))
                                     return cb('')
                                 }
                                 else
