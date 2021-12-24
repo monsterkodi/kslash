@@ -1,6 +1,6 @@
-// monsterkodi/kode 0.217.0
+// monsterkodi/kode 0.218.0
 
-var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, dbg: function (f,l,c,m,...a) { console.log(f + ':' + l + ':' + c + (m ? ' ' + m + '\n' : '\n') + a.map(function (a) { return _k_.noon(a) }).join(' '))}, list: function (l) {return (l != null ? typeof l.length === 'number' ? l : [] : [])}, noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }}
+var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return (l != null ? typeof l.length === 'number' ? l : [] : [])}}
 
 var fs, os, path
 
@@ -764,9 +764,7 @@ class Slash
             {
                 return fs.access(Slash.resolve(p),(fs.constants.R_OK | fs.constants.W_OK),function (err)
                 {
-                    _k_.dbg("kode/kslash.kode", 456, 20, null, "isWritable",err)
-                    cb
-                    return !err
+                    return cb(!err)
                 })
             }
             catch (err)
@@ -803,9 +801,9 @@ class Slash
             {
                 Slash.textext = {}
                 var list = _k_.list(require('textextensions'))
-                for (var _493_24_ = 0; _493_24_ < list.length; _493_24_++)
+                for (var _492_24_ = 0; _492_24_ < list.length; _492_24_++)
                 {
-                    ext = list[_493_24_]
+                    ext = list[_492_24_]
                     Slash.textext[ext] = true
                 }
                 Slash.textext['crypt'] = true
@@ -842,8 +840,7 @@ class Slash
             {
                 return fs.readFile(p,'utf8',function (err, text)
                 {
-                    cb
-                    return !err && text || ''
+                    return cb(!err && text || '')
                 })
             }
             catch (err)
@@ -877,9 +874,9 @@ class Slash
             {
                 return this.fileExists(p,function (stat)
                 {
-                    var mode, _532_38_
+                    var mode, _531_38_
 
-                    mode = ((_532_38_=(stat != null ? stat.mode : undefined)) != null ? _532_38_ : 0o666)
+                    mode = ((_531_38_=(stat != null ? stat.mode : undefined)) != null ? _531_38_ : 0o666)
                     return fs.writeFile(tmpfile,text,{mode:mode},function (err)
                     {
                         if (err)

@@ -399,12 +399,12 @@ process = require 'process'
     
     ▸ readText
         
-        (slash.readText __dirname + '/../package.noon').split('\n')[0] ▸ 'name            kslash'
+        (slash.readText __dirname + '/../package.noon') ▸ (a) -> a.startsWith 'name'
         (slash.readText __dirname + '/dir/filedoesntexist') ▸ ''
 
         ▸ callback
             slash.readText __dirname + '/../package.noon' (text) ->
-                text.split('\n')[0] ▸ 'name            kslash'
+                text ▸ (a) -> a.startsWith 'name'
 
             ▸ fail
                 slash.readText __dirname + '/dir/filedoesntexist' (text) ->

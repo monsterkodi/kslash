@@ -453,7 +453,6 @@ class Slash
         if cb is 'function'
             try
                 fs.access Slash.resolve(p), (fs.constants.R_OK | fs.constants.W_OK), (err) ->
-                    dbg "isWritable" err
                     cb not err
             catch err
                 Slash.error "Slash.isWritable -- " + String(err) 
