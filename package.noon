@@ -1,29 +1,29 @@
-name                kslash
-version             2.25.0
-description         path tools
+name            kslash
+version         2.25.1
+description     path tools
 keywords
-                    slash
-                    path
-                    file
-                    tool
-                    utilities
-main                js/kslash.js
+                slash
+                path
+                file
+                tool
+                utilities
+main            js/kslash.js
 files
-                    js/kslash.js
-                    js/dirlist.js
-                    js/watcher.js
+                js/kslash.js
+                js/dirlist.js
+                js/watcher.js
 scripts
-                    build   kode -Ho js kode/kslash.kode kode/dirlist.kode kode/watcher.kode
-                    test    kode -t kode/test.kode
-                    watch   kode -wt kode/test.kode
-repository          github:monsterkodi/kslash
-author              monsterkodi
-license             Unlicense
+                build   kode -Ho js kode/kslash.kode kode/dirlist.kode kode/watcher.kode
+                test    kode -t kode/test.kode
+                watch   kode -wt kode/test.kode
+repository      github:monsterkodi/kslash
+author          monsterkodi
+license         Unlicense
 dependencies
-                    fs-extra        ^10.0.0
-                    isbinaryfile    ^4.0.8
-                    textextensions  ^5.14.0
-                    uuid            ^8.3.2
-                    walkdir         ^0.4.1
+                fs-extra        ^10.0.0
+                isbinaryfile    ^4.0.8
+                textextensions  ^5.14.0
+                uuid            ^8.3.2
+                walkdir         ^0.4.1
 devDependencies
-                    kode  monsterkodi/kode
+                kode  github:monsterkodi/kode

@@ -1,6 +1,6 @@
-// monsterkodi/kode 0.218.0
+// monsterkodi/kode 0.249.0
 
-var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return (l != null ? typeof l.length === 'number' ? l : [] : [])}}
+var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
 
 var fs, os, path
 
@@ -801,9 +801,9 @@ class Slash
             {
                 Slash.textext = {}
                 var list = _k_.list(require('textextensions'))
-                for (var _492_24_ = 0; _492_24_ < list.length; _492_24_++)
+                for (var _486_24_ = 0; _486_24_ < list.length; _486_24_++)
                 {
-                    ext = list[_492_24_]
+                    ext = list[_486_24_]
                     Slash.textext[ext] = true
                 }
                 Slash.textext['crypt'] = true
@@ -874,9 +874,9 @@ class Slash
             {
                 return this.fileExists(p,function (stat)
                 {
-                    var mode, _531_38_
+                    var mode, _525_38_
 
-                    mode = ((_531_38_=(stat != null ? stat.mode : undefined)) != null ? _531_38_ : 0o666)
+                    mode = ((_525_38_=(stat != null ? stat.mode : undefined)) != null ? _525_38_ : 0o666)
                     return fs.writeFile(tmpfile,text,{mode:mode},function (err)
                     {
                         if (err)

@@ -1,6 +1,6 @@
 {
   "name": "kslash",
-  "version": "2.25.0",
+  "version": "2.25.1",
   "description": "path tools",
   "keywords": [
     "slash",
@@ -31,6 +31,6 @@
     "walkdir": "^0.4.1"
   },
   "devDependencies": {
-    "kode": "monsterkodi/kode"
+    "kode": "github:monsterkodi/kode"
   }
 }
