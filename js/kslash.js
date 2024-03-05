@@ -209,7 +209,14 @@ class Slash
 
     static removeExt (p)
     {
-        return Slash.join(Slash.dir(p),Slash.base(p))
+        var l
+
+        l = Slash.ext(p).length
+        if (l)
+        {
+            l += 1
+        }
+        return p.slice(0, p.length - l)
     }
 
     static swapExt (p, ext)

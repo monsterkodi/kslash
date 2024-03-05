@@ -39,6 +39,70 @@ process = require 'process'
         slash.removeDrive 'c:\\'            ▸ '/'
         slash.removeDrive 'c:'              ▸ '/'
         slash.removeDrive '/'               ▸ '/'
+        
+    # 00000000  000   000  000000000  
+    # 000        000 000      000     
+    # 0000000     00000       000     
+    # 000        000 000      000     
+    # 00000000  000   000     000     
+    
+    ▸ ext
+    
+        slash.ext './none'            ▸ ''
+        slash.ext './some.ext'        ▸ 'ext'
+        slash.ext './some.more.ext'   ▸ 'ext'
+        
+    # 00000000   00000000  00     00   0000000   000   000  00000000  00000000  000   000  000000000  
+    # 000   000  000       000   000  000   000  000   000  000       000        000 000      000     
+    # 0000000    0000000   000000000  000   000   000 000   0000000   0000000     00000       000     
+    # 000   000  000       000 0 000  000   000     000     000       000        000 000      000     
+    # 000   000  00000000  000   000   0000000       0      00000000  00000000  000   000     000     
+    
+    ▸ removeExt
+    
+        slash.removeExt './none'            ▸ './none'
+        slash.removeExt './some.ext'        ▸ './some'
+        slash.removeExt './some.more.ext'   ▸ './some.more'
+
+    #  0000000  00000000   000      000  000000000  00000000  000   000  000000000  
+    # 000       000   000  000      000     000     000        000 000      000     
+    # 0000000   00000000   000      000     000     0000000     00000       000     
+    #      000  000        000      000     000     000        000 000      000     
+    # 0000000   000        0000000  000     000     00000000  000   000     000     
+    
+    ▸ splitExt
+    
+        slash.splitExt './none'             ▸ ['./none' '']
+        slash.splitExt './some.ext'         ▸ ['./some' 'ext']
+        slash.splitExt './some.more.ext'    ▸ ['./some.more' 'ext']
+
+        slash.splitExt '/none'              ▸ ['/none' '']
+        slash.splitExt '/some.ext'          ▸ ['/some' 'ext']
+        slash.splitExt '/some.more.ext'     ▸ ['/some.more' 'ext']
+        
+        slash.splitExt 'none'               ▸ ['none' '']
+        slash.splitExt 'some.ext'           ▸ ['some' 'ext']
+        slash.splitExt 'some.more.ext'      ▸ ['some.more' 'ext']
+        
+    #  0000000  000   000   0000000   00000000   00000000  000   000  000000000  
+    # 000       000 0 000  000   000  000   000  000        000 000      000     
+    # 0000000   000000000  000000000  00000000   0000000     00000       000     
+    #      000  000   000  000   000  000        000        000 000      000     
+    # 0000000   00     00  000   000  000        00000000  000   000     000     
+    
+    ▸ swapExt
+    
+        slash.swapExt './some' 'new'            ▸ './some.new'
+        slash.swapExt './some.ext' 'new'        ▸ './some.new'
+        slash.swapExt './some.more.ext' 'new'   ▸ './some.more.new'
+        
+        slash.swapExt '/some' 'new'             ▸ '/some.new'
+        slash.swapExt '/some.ext' 'new'         ▸ '/some.new'
+        slash.swapExt '/some.more.ext' 'new'    ▸ '/some.more.new'
+        
+        slash.swapExt 'some' 'new'              ▸ 'some.new'
+        slash.swapExt 'some.ext' 'new'          ▸ 'some.new'
+        slash.swapExt 'some.more.ext' 'new'     ▸ 'some.more.new'
     
     # 000   0000000  00000000    0000000    0000000   000000000  
     # 000  000       000   000  000   000  000   000     000     

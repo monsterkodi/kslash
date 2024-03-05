@@ -1,8 +1,8 @@
-// monsterkodi/kode 0.250.0
+// monsterkodi/kode 0.249.0
 
 var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
-var f, f2, f3, home, process, slash, t, _317_32_, _318_33_, _319_41_, _332_37_, _333_36_, _337_35_, _338_36_, _348_29_, _349_30_, _351_26_, _352_24_, _534_24_, _535_24_, _536_24_
+var f, f2, f3, home, process, slash, t, _381_32_, _382_33_, _383_41_, _396_37_, _397_36_, _401_35_, _402_36_, _412_29_, _413_30_, _415_26_, _416_24_, _598_24_, _599_24_, _600_24_
 
 slash = require('../')
 process = require('process')
@@ -26,6 +26,42 @@ module.exports["kslash"] = function ()
         compare(slash.removeDrive('c:\\'),'/')
         compare(slash.removeDrive('c:'),'/')
         compare(slash.removeDrive('/'),'/')
+    })
+    section("ext", function ()
+    {
+        compare(slash.ext('./none'),'')
+        compare(slash.ext('./some.ext'),'ext')
+        compare(slash.ext('./some.more.ext'),'ext')
+    })
+    section("removeExt", function ()
+    {
+        compare(slash.removeExt('./none'),'./none')
+        compare(slash.removeExt('./some.ext'),'./some')
+        compare(slash.removeExt('./some.more.ext'),'./some.more')
+    })
+    section("splitExt", function ()
+    {
+        compare(slash.splitExt('./none'),['./none',''])
+        compare(slash.splitExt('./some.ext'),['./some','ext'])
+        compare(slash.splitExt('./some.more.ext'),['./some.more','ext'])
+        compare(slash.splitExt('/none'),['/none',''])
+        compare(slash.splitExt('/some.ext'),['/some','ext'])
+        compare(slash.splitExt('/some.more.ext'),['/some.more','ext'])
+        compare(slash.splitExt('none'),['none',''])
+        compare(slash.splitExt('some.ext'),['some','ext'])
+        compare(slash.splitExt('some.more.ext'),['some.more','ext'])
+    })
+    section("swapExt", function ()
+    {
+        compare(slash.swapExt('./some','new'),'./some.new')
+        compare(slash.swapExt('./some.ext','new'),'./some.new')
+        compare(slash.swapExt('./some.more.ext','new'),'./some.more.new')
+        compare(slash.swapExt('/some','new'),'/some.new')
+        compare(slash.swapExt('/some.ext','new'),'/some.new')
+        compare(slash.swapExt('/some.more.ext','new'),'/some.more.new')
+        compare(slash.swapExt('some','new'),'some.new')
+        compare(slash.swapExt('some.ext','new'),'some.new')
+        compare(slash.swapExt('some.more.ext','new'),'some.more.new')
     })
     section("isRoot", function ()
     {

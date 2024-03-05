@@ -126,7 +126,7 @@ class Slash
         
     @ext:       (p) -> path.extname(p).slice 1
     @splitExt:  (p) -> [Slash.removeExt(p), Slash.ext(p)]
-    @removeExt: (p) -> Slash.join Slash.dir(p), Slash.base p
+    @removeExt: (p) -> l = Slash.ext(p).length; l += 1 if l; p[...p.length-l]
     @swapExt:   (p, ext) -> Slash.removeExt(p) + (ext.startsWith('.') and ext or ".#{ext}")
         
     #       000   0000000   000  000   000  
